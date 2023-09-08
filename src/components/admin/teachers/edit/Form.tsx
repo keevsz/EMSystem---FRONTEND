@@ -51,7 +51,7 @@ function Form({ user }: Props) {
       },
       user._id
     )
-    router.push('/users/list')
+    router.push('/users')
     router.refresh()
   }
 

@@ -41,7 +41,7 @@ function Form() {
       return Promise.reject('Datos invalidos')
     }
     await fetchCreateTeacher(data?.backendTokens.accessToken!, teacherData)
-    router.push('/users/list')
+    router.push('/users')
     router.refresh()
   }
 

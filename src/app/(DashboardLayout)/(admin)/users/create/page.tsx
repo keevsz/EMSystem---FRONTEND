@@ -5,7 +5,7 @@ function UsersCreatePage() {
   return (
     <div className="flex flex-col gap-2 w-auto">
       <div className='w-auto'>
-        <BtnBack route={'/users/list'} />
+        <BtnBack route={'/users'} />
       </div>
       <Form></Form>
     </div>

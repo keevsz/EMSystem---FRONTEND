@@ -4,7 +4,7 @@ import React from 'react'
 
 function loading() {
   return (
-    <div className="flex h-24 justify-center items-center">
+    <div className="flex justify-center items-center">
       <Spinner />
     </div>
   )

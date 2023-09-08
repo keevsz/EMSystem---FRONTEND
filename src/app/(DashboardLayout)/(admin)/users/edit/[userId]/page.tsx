@@ -17,7 +17,7 @@ async function UserEditPage({ params }: Props) {
   )
   return (
     <div>
-      <BtnBack route={'/users/list'} />
+      <BtnBack route={'/users'} />
       <Form user={user} />
     </div>
   )
