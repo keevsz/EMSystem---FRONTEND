@@ -1,12 +1,16 @@
 'use client'
 
 import React, { FormEvent, useState } from 'react'
-import { Button, Input, Radio, RadioGroup } from '@nextui-org/react'
-import { fetchCreateTeacher, fetchUploadImg } from '@/app/api/users/route'
+import { Button, Input } from '@nextui-org/react'
+import {
+  fetchCreateTeacher,
+  fetchEditUser,
+  fetchUploadImg,
+} from '@/app/api/users/route'
 import { useSession } from 'next-auth/react'
 import { ITeacher, IUser } from '@/types/user'
 import { toast } from 'react-hot-toast'
-import { useRouter } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import Image from 'next/image'
 
 interface Props {
@@ -16,25 +20,35 @@ interface Props {
 function Form({ user }: Props) {
   const { data } = useSession()
   const [selected, setSelected] = React.useState('m')
+
+  const [userData, setUserData] = useState<Partial<IUser>>({
+    firstName: user.firstName,
+    lastName: user.lastName,
+    username: user.username,
+    password: '',
+  })
   const [pic, setPic] = useState<any>(user.avatar)
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUserData({ ...userData, [e.target.name]: e.target.value })
+  }
   const router = useRouter()
 
-  const fetchCreateTeacherFn = async (e: FormEvent<HTMLFormElement>) => {
-    let setPic = pic === user.avatar ? null : pic
+  const fetchEditTeacherFn = async () => {
+    let picToSend = pic === user.avatar ? user.avatar : pic
 
-    const formData = new FormData(e.currentTarget)
-    let teacherData: ITeacher = {
-      username: formData.get('username')?.toString()!,
-      email: formData.get('email')?.toString()!,
-      firstName: formData.get('firstName')?.toString()!,
-      lastName: formData.get('lastName')?.toString()!,
-      phoneNumber: formData.get('phoneNumber')?.toString()!,
-      birthdate: formData.get('birthdate')?.toString()!,
-      gender: selected,
-      avatar: setPic,
-    }
-    await fetchCreateTeacher(data?.backendTokens.accessToken!, teacherData)
+    const res = await fetchEditUser(
+      data?.backendTokens.accessToken!,
+      {
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        username: userData.username,
+        password: userData.password,
+        avatar: picToSend,
+        role: user.role,
+      },
+      user._id
+    )
     router.push('/users/list')
     router.refresh()
   }
@@ -44,9 +58,8 @@ function Form({ user }: Props) {
     setPic(response.data.url)
   }
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    toast.promise(fetchCreateTeacherFn(e), {
+  const handleSubmit = async () => {
+    toast.promise(fetchEditTeacherFn(), {
       loading: 'Guardando...',
       success: <b>Cambios guardados.</b>,
       error: <b>No se guardaron los cambios.</b>,
@@ -105,14 +118,17 @@ function Form({ user }: Props) {
           label="Nombre de usuario"
           variant="bordered"
           name="username"
-          value={user.username}
+          value={userData.username}
+          onChange={handleChange}
         />
         <Input
           fullWidth
           type="password"
-          label="Contraseña"
+          label="Ingrese nueva contraseña"
           variant="bordered"
           name="password"
+          value={userData.password}
+          onChange={handleChange}
         />
       </div>
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2">
@@ -122,7 +138,8 @@ function Form({ user }: Props) {
           label="Nombres"
           variant="bordered"
           name="firstName"
-          value={user.firstName}
+          value={userData.firstName}
+          onChange={handleChange}
         />
         <Input
           fullWidth
@@ -130,10 +147,16 @@ function Form({ user }: Props) {
           label="Apellidos"
           variant="bordered"
           name="lastName"
-          value={user.lastName}
+          value={userData.lastName}
+          onChange={handleChange}
         />
       </div>
-      <Button color="success" type="submit" className="w-32 text-center">
+      <Button
+        color="success"
+        onClick={handleSubmit}
+        type="button"
+        className="w-32 text-center"
+      >
         Guardar cambios
       </Button>
     </form>

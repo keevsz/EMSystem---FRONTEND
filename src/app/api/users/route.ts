@@ -1,4 +1,4 @@
-import { ITeacher } from '@/types/user'
+import { ITeacher, IUser } from '@/types/user'
 import axios from 'axios'
 
 const BACKEND_URL = 'http://localhost:3001'
@@ -83,15 +83,16 @@ export async function fetchCreateTeacher(
 
 export async function fetchEditUser(
   accessToken: string,
-  teacherData: ITeacher
+  userData: Partial<IUser>,
+  userId: string
 ) {
-  const res = await fetch(`${BACKEND_URL}/teachers`, {
-    method: 'POST',
+  const res = await fetch(`${BACKEND_URL}/users/${userId}`, {
+    method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
       authorization: `Bearer ${accessToken}`,
     },
-    body: JSON.stringify(teacherData),
+    body: JSON.stringify(userData),
   })
   const data = await res.json()
   if (

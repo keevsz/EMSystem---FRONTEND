@@ -13,6 +13,7 @@ export interface IUser {
   avatar: string
   isActive: string
   role: string
+  password?: string,
 }
 
 export interface ITeacher extends Partial<IUser> {
