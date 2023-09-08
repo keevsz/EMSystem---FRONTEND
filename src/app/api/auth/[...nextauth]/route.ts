@@ -1,4 +1,5 @@
 import NextAuth from 'next-auth'
+import { AuthOptions } from 'next-auth'
 import { JWT } from 'next-auth/jwt'
 import CredentialsProvider from 'next-auth/providers/credentials'
 
@@ -9,7 +10,6 @@ async function refreshToken(token: JWT): Promise<JWT> {
       authorization: `Refresh ${token.backendTokens.refreshToken}`,
     },
   })
-  console.log('refreshed token')
 
   const response = await res.json()
 
@@ -19,7 +19,7 @@ async function refreshToken(token: JWT): Promise<JWT> {
   }
 }
 
-const handler = NextAuth({
+export const authOptions: AuthOptions = {
   session: {
     strategy: 'jwt',
   },
@@ -55,9 +55,7 @@ const handler = NextAuth({
   callbacks: {
     jwt: async ({ token, user }) => {
       if (user) return { ...token, ...user }
-      if (new Date().getTime() < (token as any).backendTokens.expiresIn)
-        return token
-
+      if (new Date().getTime() < token.backendTokens.expiresIn) return token
       return await refreshToken(token)
     },
     session: async ({ session, token }) => {
@@ -70,6 +68,8 @@ const handler = NextAuth({
   pages: {
     signIn: '/login',
   },
-})
+}
+
+const handler = NextAuth(authOptions)
 
 export { handler as GET, handler as POST }
