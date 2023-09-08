@@ -31,6 +31,15 @@ function Form() {
       gender: selected,
       avatar: setPic,
     }
+    if (
+      !teacherData.email ||
+      !teacherData.firstName ||
+      !teacherData.lastName ||
+      !teacherData.phoneNumber ||
+      !teacherData.username
+    ) {
+      return Promise.reject('Datos invalidos')
+    }
     await fetchCreateTeacher(data?.backendTokens.accessToken!, teacherData)
     router.push('/users/list')
     router.refresh()
@@ -46,7 +55,7 @@ function Form() {
     toast.promise(fetchCreateTeacherFn(e), {
       loading: 'Guardando...',
       success: <b>Profesor registrado.</b>,
-      error: <b>El usuario no pudo ser registrado.</b>,
+      error: (e) => <b>{e}</b>,
     })
   }
 
@@ -83,9 +92,14 @@ function Form() {
                 Editar
               </label>
             </Button>
-            <Button color="danger" onClick={()=>{
-              setPic(pic_change)
-            }}>Restablecer</Button>
+            <Button
+              color="danger"
+              onClick={() => {
+                setPic(pic_change)
+              }}
+            >
+              Restablecer
+            </Button>
           </div>
           <div>JPG, JPEG o PNG permitidos. Tamaño máximo de 800K.</div>
         </div>
@@ -97,6 +111,7 @@ function Form() {
           label="Nombre de usuario"
           variant="bordered"
           name="username"
+          required
         />
         <Input
           fullWidth
@@ -104,6 +119,7 @@ function Form() {
           label="email"
           variant="bordered"
           name="email"
+          required
         />
       </div>
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2">
@@ -113,6 +129,7 @@ function Form() {
           label="Nombres"
           variant="bordered"
           name="firstName"
+          required
         />
         <Input
           fullWidth
@@ -120,6 +137,7 @@ function Form() {
           label="Apellidos"
           variant="bordered"
           name="lastName"
+          required
         />
       </div>
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-3">
@@ -128,6 +146,7 @@ function Form() {
           label="Teléfono celular"
           variant="bordered"
           name="phoneNumber"
+          required
           fullWidth
         />
 

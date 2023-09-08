@@ -36,8 +36,10 @@ function Form({ user }: Props) {
 
   const fetchEditTeacherFn = async () => {
     let picToSend = pic === user.avatar ? user.avatar : pic
-
-    const res = await fetchEditUser(
+    if (!userData.firstName || !userData.lastName || !userData.username) {
+      return Promise.reject('Datos invalidos')
+    }
+    await fetchEditUser(
       data?.backendTokens.accessToken!,
       {
         firstName: userData.firstName,
@@ -62,7 +64,7 @@ function Form({ user }: Props) {
     toast.promise(fetchEditTeacherFn(), {
       loading: 'Guardando...',
       success: <b>Cambios guardados.</b>,
-      error: <b>No se guardaron los cambios.</b>,
+      error: (error) => <b>{error}</b>,
     })
   }
 
