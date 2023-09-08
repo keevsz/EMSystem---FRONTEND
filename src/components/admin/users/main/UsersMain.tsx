@@ -11,6 +11,17 @@ function UsersMain({ usersCount }: Props) {
       <Card className="w-full">
         <CardBody>
           <div className="flex items-center justify-start gap-4">
+            <div className="border-1 rounded-full border-solid bg-violet-700 w-6 h-6"></div>
+            <div className="">
+              <h2 className="text-lg">Administradores</h2>
+              <h1 className="text-2xl font-bold">{usersCount.admins}</h1>
+            </div>
+          </div>
+        </CardBody>
+      </Card>
+      <Card className="w-full">
+        <CardBody>
+          <div className="flex items-center justify-start gap-4">
             <div className="border-1 rounded-full border-solid bg-green-500 w-6 h-6"></div>
             <div className="">
               <h2 className="text-lg">Profesores</h2>
@@ -37,17 +48,6 @@ function UsersMain({ usersCount }: Props) {
             <div className="">
               <h2 className="text-lg">Padres</h2>
               <h1 className="text-2xl font-bold">{usersCount.parents}</h1>
-            </div>
-          </div>
-        </CardBody>
-      </Card>
-      <Card className="w-full">
-        <CardBody>
-          <div className="flex items-center justify-start gap-4">
-            <div className="border-1 rounded-full border-solid bg-violet-700 w-6 h-6"></div>
-            <div className="">
-              <h2 className="text-lg">Administradores</h2>
-              <h1 className="text-2xl font-bold">{usersCount.admins}</h1>
             </div>
           </div>
         </CardBody>
