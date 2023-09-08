@@ -10,7 +10,11 @@ export async function fetchAllUsers(accessToken: string) {
     },
   })
   const data = await res.json()
-  if (data.statusCode === 403) {
+  if (
+    data.statusCode === 403 ||
+    data.statusCode === 401 ||
+    data.statusCode === 400
+  ) {
     throw new Error(data.message)
   }
   return data
@@ -24,7 +28,11 @@ export async function fetchUsersCount(accessToken: string) {
     },
   })
   const data = await res.json()
-  if (data.statusCode === 403) {
+  if (
+    data.statusCode === 403 ||
+    data.statusCode === 401 ||
+    data.statusCode === 400
+  ) {
     throw new Error(data.message)
   }
   return data
@@ -38,7 +46,11 @@ export async function fetchUsersDetails(accessToken: string, id: string) {
     },
   })
   const data = await res.json()
-  if (data.statusCode === 403) {
+  if (
+    data.statusCode === 403 ||
+    data.statusCode === 401 ||
+    data.statusCode === 400
+  ) {
     throw new Error(data.message)
   }
   return data
@@ -52,7 +64,11 @@ export async function fetchDeleteUser(accessToken: string, id: string) {
     },
   })
   const data = await res.json()
-  if (data.statusCode === 403) {
+  if (
+    data.statusCode === 403 ||
+    data.statusCode === 401 ||
+    data.statusCode === 400
+  ) {
     throw new Error(data.message)
   }
   return data
