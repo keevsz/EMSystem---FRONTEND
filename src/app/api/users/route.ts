@@ -1,9 +1,9 @@
 import { ITeacher, IUser } from '@/types/user'
 import axios from 'axios'
 
-const BACKEND_URL = 'http://localhost:3001'
+const BACKEND_URL = process.env.API_URL || 'https://emsystem.onrender.com'
 export async function fetchAllUsers(accessToken: string) {
-  const res = await fetch(`${process.env.API_URL}/users`, {
+  const res = await fetch(`${BACKEND_URL}/users`, {
     method: 'GET',
     headers: {
       authorization: `Bearer ${accessToken}`,
@@ -21,7 +21,7 @@ export async function fetchAllUsers(accessToken: string) {
 }
 
 export async function fetchUsersCount(accessToken: string) {
-  const res = await fetch(`${process.env.API_URL}/users/count`, {
+  const res = await fetch(`${BACKEND_URL}/users/count`, {
     method: 'GET',
     headers: {
       authorization: `Bearer ${accessToken}`,
@@ -39,7 +39,7 @@ export async function fetchUsersCount(accessToken: string) {
 }
 
 export async function fetchUsersDetails(accessToken: string, id: string) {
-  const res = await fetch(`${process.env.API_URL}/users/${id}`, {
+  const res = await fetch(`${BACKEND_URL}/users/${id}`, {
     method: 'GET',
     headers: {
       authorization: `Bearer ${accessToken}`,
