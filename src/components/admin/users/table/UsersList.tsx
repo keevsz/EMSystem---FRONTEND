@@ -136,14 +136,14 @@ export default function UsersList({ users }: Props) {
                 </Link>
               </span>
             </Tooltip> */}
-            <Tooltip content="Edit user">
+            <Tooltip content="Editar">
               <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
                 <Link href={`/users/edit/${user._id}`}>
                   <EditIcon />
                 </Link>
               </span>
             </Tooltip>
-            <Tooltip color="danger" content="Delete user">
+            <Tooltip color="danger" content="Eliminar">
               <span className="text-lg text-danger cursor-pointer active:opacity-50">
                 {/* <DeleteIcon /> */}
                 <ModalC user={user} />
