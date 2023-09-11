@@ -1,7 +1,7 @@
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import { fetchUsersDetails } from '@/app/api/users/route'
 import Form from '@/components/admin/teachers/edit/Form'
-import BtnBack from '@/components/admin/users/BtnBack'
+import BtnBack from '@/components/common/BtnBack'
 import { IUser } from '@/types/user'
 import { getServerSession } from 'next-auth'
 
@@ -16,9 +16,13 @@ async function UserEditPage({ params }: Props) {
     params.userId
   )
   return (
-    <div>
-      <BtnBack route={'/users'} />
-      <Form user={user} />
+    <div className="flex gap-5">
+      <div className='w-auto'>
+        <BtnBack route={'/users'} />
+      </div>
+      <div className='w-full'>
+        <Form user={user} />
+      </div>
     </div>
   )
 }

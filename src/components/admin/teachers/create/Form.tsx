@@ -9,6 +9,7 @@ import { toast } from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
 import pic_change from './pic_change.png'
 import Image from 'next/image'
+import DividerC from '@/components/common/DividerC'
 
 function Form() {
   const { data } = useSession()
@@ -47,7 +48,15 @@ function Form() {
 
   const uploadImage = async (files: File) => {
     const response: any = await fetchUploadImg(files)
-    setPic(response.data.url)
+    await setPic(response.data.url)
+  }
+
+  const handleUploadImage = async(files: File) => {
+    toast.promise(uploadImage(files), {
+      loading: 'Cargando...',
+      success: <b>Imagen cargada.</b>,
+      error: (error) => <b>No se pudo cargar la imagen</b>,
+    })
   }
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -55,13 +64,14 @@ function Form() {
     toast.promise(fetchCreateTeacherFn(e), {
       loading: 'Guardando...',
       success: <b>Profesor registrado.</b>,
-      error: (e) => <b>{e}</b>,
+      error: (e) => <b>{e.toString()}</b>,
     })
   }
 
   return (
-    <form className="flex flex-col gap-2" onSubmit={handleSubmit}>
-      <h3 className="text-xl font-bold">Registrar nuevo profesor</h3>
+    <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
+      <h3 className="text-xl font-bold -mb-6">Registrar nuevo profesor</h3>
+      <DividerC />
       <div className="flex gap-4 items-center">
         <Image
           alt="Pic"
@@ -75,7 +85,7 @@ function Form() {
             <input
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 if (!e.target.files) return
-                uploadImage(e.target.files[0])
+                handleUploadImage(e.target.files[0])
                 e.target.value = ''
               }}
               className="hidden "

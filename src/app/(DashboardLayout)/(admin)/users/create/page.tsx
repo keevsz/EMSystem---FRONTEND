@@ -1,13 +1,15 @@
-import BtnBack from '@/components/admin/users/BtnBack'
+import BtnBack from '@/components/common/BtnBack'
 import Form from '@/components/admin/teachers/create/Form'
 
 function UsersCreatePage() {
   return (
-    <div className="flex flex-col gap-2 w-auto">
+    <div className="flex gap-5">
       <div className='w-auto'>
         <BtnBack route={'/users'} />
       </div>
-      <Form></Form>
+      <div className='w-full'>
+        <Form/>
+      </div>
     </div>
   )
 }

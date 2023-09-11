@@ -4,16 +4,23 @@ import Link from 'next/link'
 import SchoolPng from '../../../public/school.png'
 import {
   Avatar,
+  Button,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@nextui-org/react'
-import { useSession } from 'next-auth/react'
+import { signOut, useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 
 function Navbar() {
   const { data: session } = useSession()
+  const router = useRouter()
   return (
-    <nav className="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+    <nav className="fixed top-0 z-50 w-full bg-slate-100 dark:bg-gray-800 dark:border-gray-700">
       <div className="px-3 py-3 lg:px-5 lg:pl-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center justify-start">
@@ -47,9 +54,9 @@ function Navbar() {
           <div className="flex items-center">
             <div className="flex items-center ml-3">
               <div>
-                <Popover placement="bottom" showArrow={true}>
-                  <PopoverTrigger className="cursor-pointer">
-                    <div className="flex justify-center items-center gap-4">
+                <Dropdown>
+                  <DropdownTrigger>
+                    <div className="flex justify-center items-center gap-4 cursor-pointer">
                       <span>
                         {session && (
                           <div>
@@ -59,18 +66,28 @@ function Navbar() {
                       </span>
                       <Avatar src={session?.user.avatar} />
                     </div>
-                  </PopoverTrigger>
-                  <PopoverContent>
-                    <div className="px-1 py-2">
-                      <div className="text-small font-bold">
-                        Popover Content
-                      </div>
-                      <div className="text-tiny">
-                        This is the popover content
-                      </div>
-                    </div>
-                  </PopoverContent>
-                </Popover>
+                  </DropdownTrigger>
+                  <DropdownMenu aria-label="Static Actions">
+                    <DropdownItem
+                      key="profile"
+                      onClick={() => {
+                        router.push('/profile')
+                      }}
+                    >
+                      Mi perfil
+                    </DropdownItem>
+                    <DropdownItem
+                      key="delete"
+                      className="text-danger"
+                      color="danger"
+                      onClick={() => {
+                        signOut()
+                      }}
+                    >
+                      Salir
+                    </DropdownItem>
+                  </DropdownMenu>
+                </Dropdown>
               </div>
             </div>
           </div>

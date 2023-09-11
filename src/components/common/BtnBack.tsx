@@ -1,21 +1,22 @@
 'use client'
-import { Button } from '@nextui-org/react'
 import { useRouter } from 'next/navigation'
+import BackIcon from './BackIcon'
 interface Props {
   route: string
 }
 function BtnBack({ route }: Props) {
   const router = useRouter()
   return (
-    <Button
-      type="button"
-      color="primary"
+    <span
+      className="text-lg text-default-400 cursor-pointer active:opacity-50"
       onClick={() => {
         router.push(route)
       }}
     >
-      Regresar
-    </Button>
+      <div className='w-8'>
+        <BackIcon />
+      </div>
+    </span>
   )
 }
 

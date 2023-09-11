@@ -4,7 +4,7 @@ import React from 'react'
 
 function loading() {
   return (
-    <div>
+    <div className="flex justify-center items-center min-h-full bg-red-400">
       <Spinner />
     </div>
   )

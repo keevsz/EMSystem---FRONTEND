@@ -1,59 +1,72 @@
 'use client'
 
-import React, { FormEvent, useState } from 'react'
-import { Button, Input, Divider } from '@nextui-org/react'
-import {
-  fetchCreateTeacher,
-  fetchEditUser,
-  fetchUploadImg,
-} from '@/app/api/users/route'
+import React, { useState } from 'react'
+import { Button, Input, Radio, RadioGroup } from '@nextui-org/react'
+import { fetchUpdateProfile, fetchUploadImg } from '@/app/api/users/route'
 import { useSession } from 'next-auth/react'
 import { ITeacher, IUser } from '@/types/user'
 import { toast } from 'react-hot-toast'
-import { useParams, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import Image from 'next/image'
-import DividerC from '@/components/common/DividerC'
 
 interface Props {
-  user: IUser
+  user: ITeacher & IUser
 }
 
 function Form({ user }: Props) {
-  const { data } = useSession()
-  const [selected, setSelected] = React.useState('m')
+  const { data, update } = useSession()
 
-  const [userData, setUserData] = useState<Partial<IUser>>({
+  const INITIAL_DATA: IUser & ITeacher = {
     firstName: user.firstName,
     lastName: user.lastName,
     username: user.username,
     password: '',
-  })
+    birthdate: user.birthdate,
+    email: user.email,
+    gender: user.gender,
+    phoneNumber: user.phoneNumber,
+    _id: user._id,
+    avatar: user.avatar,
+    isActive: user.isActive,
+    role: user.role,
+  }
+
+  const [userData, setUserData] = useState<IUser & ITeacher>(INITIAL_DATA)
   const [pic, setPic] = useState<any>(user.avatar)
+  const [selected, setSelected] = React.useState(user.gender || 'm')
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserData({ ...userData, [e.target.name]: e.target.value })
   }
   const router = useRouter()
 
-  const fetchEditTeacherFn = async () => {
+  const fetchEditUserFn = async () => {
     let picToSend = pic === user.avatar ? user.avatar : pic
     if (!userData.firstName || !userData.lastName || !userData.username) {
       return Promise.reject('Datos invalidos')
     }
-    await fetchEditUser(
+
+    const dataToSend: any = {
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+      username: userData.username,
+      password: userData.password,
+      birthdate: userData.birthdate,
+      email: userData.email,
+      gender: selected,
+      phoneNumber: userData.phoneNumber,
+      avatar: picToSend,
+      role: user.role,
+    }
+
+    await fetchUpdateProfile(
       data?.backendTokens.accessToken!,
-      {
-        firstName: userData.firstName,
-        lastName: userData.lastName,
-        username: userData.username,
-        password: userData.password,
-        avatar: picToSend,
-        role: user.role,
-      },
+      dataToSend,
       user._id
     )
-    router.push('/users')
+    update()
     router.refresh()
+    router.push('/')
   }
 
   const uploadImage = async (files: File) => {
@@ -70,7 +83,7 @@ function Form({ user }: Props) {
   }
 
   const handleSubmit = async () => {
-    toast.promise(fetchEditTeacherFn(), {
+    toast.promise(fetchEditUserFn(), {
       loading: 'Guardando...',
       success: <b>Cambios guardados.</b>,
       error: (error) => <b>{error.toString()}</b>,
@@ -78,9 +91,7 @@ function Form({ user }: Props) {
   }
 
   return (
-    <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
-      <h3 className="text-xl font-bold -mb-6">Editar datos generales del usuario</h3>
-      <DividerC />
+    <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
       <div className="flex gap-4 items-center">
         <Image
           alt="Pic"
@@ -163,6 +174,49 @@ function Form({ user }: Props) {
           onChange={handleChange}
         />
       </div>
+      {user.role === 'teacher' ? (
+        <>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2">
+            <Input
+              fullWidth
+              type="text"
+              label="email"
+              variant="bordered"
+              name="email"
+              value={userData.email}
+              onChange={handleChange}
+            />
+            <Input
+              type="text"
+              label="Teléfono celular"
+              variant="bordered"
+              name="phoneNumber"
+              value={userData.phoneNumber}
+              onChange={handleChange}
+              fullWidth
+            />
+          </div>
+
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2">
+            <Input
+              type="date"
+              variant="bordered"
+              label="Fecha de nacimiento"
+              placeholder="Select date"
+              name="birthdate"
+              value={userData.birthdate}
+              onChange={handleChange}
+              fullWidth
+            />
+            <RadioGroup value={selected} onValueChange={setSelected}>
+              <Radio value="m" defaultChecked>
+                Masculino
+              </Radio>
+              <Radio value="f">Femenino</Radio>
+            </RadioGroup>
+          </div>
+        </>
+      ) : null}
       <Button
         color="success"
         onClick={handleSubmit}

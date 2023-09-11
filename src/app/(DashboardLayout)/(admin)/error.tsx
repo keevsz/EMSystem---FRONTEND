@@ -9,7 +9,7 @@ export default function Error({
 }) {
   return (
     <div>
-      <h2 className="text-red-400 text-xl">{error.message}</h2>
+      <h2 className="text-red-400 text-xl">{JSON.stringify(error.message)}</h2>
       <button className="text-red-400 text-md" onClick={() => reset()}>
         Reintentar
       </button>
