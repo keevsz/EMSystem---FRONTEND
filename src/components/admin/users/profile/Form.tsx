@@ -14,21 +14,22 @@ interface Props {
 }
 
 function Form({ user }: Props) {
+  console.log({ user })
   const { data, update } = useSession()
 
   const INITIAL_DATA: IUser & ITeacher = {
-    firstName: user.firstName,
-    lastName: user.lastName,
-    username: user.username,
+    firstName: user?.firstName,
+    lastName: user?.lastName,
+    username: user?.username,
     password: '',
-    birthdate: user.birthdate,
-    email: user.email,
-    gender: user.gender,
-    phoneNumber: user.phoneNumber,
-    _id: user._id,
-    avatar: user.avatar,
-    isActive: user.isActive,
-    role: user.role,
+    birthdate: user?.birthdate,
+    email: user?.email,
+    gender: user?.gender,
+    phoneNumber: user?.phoneNumber,
+    _id: user?._id,
+    avatar: user?.avatar,
+    isActive: user?.isActive,
+    role: user?.role,
   }
 
   const [userData, setUserData] = useState<IUser & ITeacher>(INITIAL_DATA)
