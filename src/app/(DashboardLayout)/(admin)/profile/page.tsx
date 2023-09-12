@@ -3,29 +3,34 @@ import { fetchTeacherDetails, fetchUsersDetails } from '@/app/api/users/route'
 import DividerC from '@/components/common/DividerC'
 import FormAdmin from '@/components/admin/users/profile/Form'
 import { getServerSession } from 'next-auth'
+import { redirect } from 'next/navigation'
 
 async function ProfilePage() {
   const data = await getServerSession(authOptions)
   let user = null
-  if (data?.user.role === 'admin') {
+  if (data?.user?.role === 'admin') {
     user = await fetchUsersDetails(
       data?.backendTokens.accessToken!,
       data?.user._id!
     )
-  } else if (data?.user.role === 'teacher') {
+  } else if (data?.user?.role === 'teacher') {
     user = await fetchTeacherDetails(
       data?.backendTokens.accessToken!,
       data?.user._id!
     )
   }
 
-  return (
-    <div className="container flex flex-col">
-      <h3 className='text-xl font-semibold'>Mi perfil</h3>
-      <DividerC></DividerC>
-      <FormAdmin user={user}></FormAdmin>
-    </div>
-  )
+  if (user) {
+    return (
+      <div className="container flex flex-col">
+        <h3 className="text-xl font-semibold">Mi perfil</h3>
+        <DividerC></DividerC>
+        <FormAdmin user={user}></FormAdmin>
+      </div>
+    )
+  } else {
+    redirect('/')
+  }
 }
 
 export default ProfilePage
