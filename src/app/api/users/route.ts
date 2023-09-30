@@ -1,8 +1,8 @@
 import { ITeacher, IUser } from '@/types/user'
 import axios from 'axios'
 
-// const BACKEND_URL = 'http://localhost:3001' || process.env.API_URL || 'https://emsystem.onrender.com'
-const BACKEND_URL = process.env.API_URL || 'https://emsystem.onrender.com'
+const BACKEND_URL = 'http://localhost:3001' || process.env.API_URL || 'https://emsystem.onrender.com'
+// const BACKEND_URL = process.env.API_URL || 'https://emsystem.onrender.com'
 export async function fetchAllUsers(accessToken: string) {
   const res = await fetch(`${BACKEND_URL}/users`, {
     method: 'GET',
@@ -59,6 +59,24 @@ export async function fetchUsersDetails(accessToken: string, id: string) {
 
 export async function fetchTeacherDetails(accessToken: string, id: string) {
   const res = await fetch(`${BACKEND_URL}/teachers/${id}`, {
+    method: 'GET',
+    headers: {
+      authorization: `Bearer ${accessToken}`,
+    },
+  })
+  const data = await res.json()
+  if (
+    data.statusCode === 403 ||
+    data.statusCode === 401 ||
+    data.statusCode === 400
+  ) {
+    throw new Error(data.message)
+  }
+  return data
+}
+
+export async function fetchStudentDetails(accessToken: string, id: string) {
+  const res = await fetch(`${BACKEND_URL}/students/${id}`, {
     method: 'GET',
     headers: {
       authorization: `Bearer ${accessToken}`,

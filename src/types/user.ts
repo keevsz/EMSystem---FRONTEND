@@ -13,12 +13,19 @@ export interface IUser {
   avatar: string
   isActive: string
   role: string
-  password?: string,
+  password?: string
 }
 
 export interface ITeacher extends Partial<IUser> {
   email: string
   phoneNumber: string
   birthdate: string
+  gender: string
+}
+
+export interface IStudent extends Partial<IUser> {
+  dni: string
+  birthdate: string
+  address: string
   gender: string
 }

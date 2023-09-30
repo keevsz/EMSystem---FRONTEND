@@ -1,5 +1,9 @@
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
-import { fetchTeacherDetails, fetchUsersDetails } from '@/app/api/users/route'
+import {
+  fetchStudentDetails,
+  fetchTeacherDetails,
+  fetchUsersDetails,
+} from '@/app/api/users/route'
 import DividerC from '@/components/common/DividerC'
 import FormAdmin from '@/components/admin/users/profile/Form'
 import { getServerSession } from 'next-auth'
@@ -17,6 +21,11 @@ async function ProfilePage() {
     user = await fetchTeacherDetails(
       data?.backendTokens.accessToken!,
       data?.user._id!
+    )
+  } else if (data?.user.role === 'student') {
+    user = await fetchStudentDetails(
+      data?.backendTokens.accessToken!,
+      data.user._id
     )
   }
 

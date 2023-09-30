@@ -4,20 +4,20 @@ import React, { useState } from 'react'
 import { Button, Input, Radio, RadioGroup } from '@nextui-org/react'
 import { fetchUpdateProfile, fetchUploadImg } from '@/app/api/users/route'
 import { useSession } from 'next-auth/react'
-import { ITeacher, IUser } from '@/types/user'
+import { IStudent, ITeacher, IUser } from '@/types/user'
 import { toast } from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 
 interface Props {
-  user: ITeacher & IUser
+  user: ITeacher & IUser & IStudent
 }
 
 function Form({ user }: Props) {
   console.log({ user })
   const { data, update } = useSession()
 
-  const INITIAL_DATA: IUser & ITeacher = {
+  const INITIAL_DATA: IUser & ITeacher & IStudent = {
     firstName: user?.firstName,
     lastName: user?.lastName,
     username: user?.username,
@@ -30,9 +30,13 @@ function Form({ user }: Props) {
     avatar: user?.avatar,
     isActive: user?.isActive,
     role: user?.role,
+    address: user?.address,
+    dni: user?.dni,
   }
 
-  const [userData, setUserData] = useState<IUser & ITeacher>(INITIAL_DATA)
+  const [userData, setUserData] = useState<IUser & ITeacher & IStudent>(
+    INITIAL_DATA
+  )
   const [pic, setPic] = useState<any>(user.avatar)
   const [selected, setSelected] = React.useState(user.gender || 'm')
 
@@ -102,40 +106,52 @@ function Form({ user }: Props) {
           className="w-36 h-36 text-large rounded-sm"
         ></Image>
         <div>
-          <div className="flex gap-3">
-            <input
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                if (!e.target.files) return
-                handleUploadImage(e.target.files[0])
-                e.target.value = ''
-              }}
-              className="hidden "
-              id="file_input"
-              type="file"
-              accept=".jpg,.jpeg,.png"
-            />
+          {user.role === 'student' ? (
+            ''
+          ) : (
+            <>
+              <div className="flex gap-3">
+                <input
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    if (!e.target.files) return
+                    handleUploadImage(e.target.files[0])
+                    e.target.value = ''
+                  }}
+                  className="hidden "
+                  id="file_input"
+                  type="file"
+                  accept=".jpg,.jpeg,.png"
+                />
 
-            <Button fullWidth>
-              <label
-                className="cursor-pointer bg-gray-300 w-full h-full flex justify-center items-center"
-                htmlFor="file_input"
-              >
-                Editar
-              </label>
-            </Button>
-            <Button
-              color="danger"
-              onClick={() => {
-                setPic(user.avatar)
-              }}
-            >
-              Restablecer
-            </Button>
-          </div>
-          <div>JPG, JPEG o PNG permitidos. Tamaño máximo de 800K.</div>
+                <Button fullWidth>
+                  <label
+                    className="cursor-pointer bg-gray-300 w-full h-full flex justify-center items-center"
+                    htmlFor="file_input"
+                  >
+                    Editar
+                  </label>
+                </Button>
+                <Button
+                  color="danger"
+                  onClick={() => {
+                    setPic(user.avatar)
+                  }}
+                >
+                  Restablecer
+                </Button>
+              </div>
+              <div>JPG, JPEG o PNG permitidos. Tamaño máximo de 800K.</div>
+            </>
+          )}
         </div>
       </div>
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2">
+      <div
+        className={`grid grid-cols-1 gap-6 sm:grid-cols-1 md:grid-cols-1 ${
+          user.role !== 'student'
+            ? 'lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2'
+            : ''
+        }`}
+      >
         <Input
           fullWidth
           type="text"
@@ -145,15 +161,19 @@ function Form({ user }: Props) {
           value={userData.username}
           onChange={handleChange}
         />
-        <Input
-          fullWidth
-          type="password"
-          label="Ingrese nueva contraseña"
-          variant="bordered"
-          name="password"
-          value={userData.password}
-          onChange={handleChange}
-        />
+        {user.role === 'student' ? (
+          ''
+        ) : (
+          <Input
+            fullWidth
+            type="password"
+            label="Ingrese nueva contraseña"
+            variant="bordered"
+            name="password"
+            value={userData.password}
+            onChange={handleChange}
+          />
+        )}
       </div>
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2">
         <Input
@@ -175,6 +195,7 @@ function Form({ user }: Props) {
           onChange={handleChange}
         />
       </div>
+      {/* //TODO: Teacher imputs */}
       {user.role === 'teacher' ? (
         <>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2">
@@ -218,14 +239,63 @@ function Form({ user }: Props) {
           </div>
         </>
       ) : null}
-      <Button
-        color="success"
-        onClick={handleSubmit}
-        type="button"
-        className="w-32 text-center"
-      >
-        Guardar cambios
-      </Button>
+
+      {/* //TODO: Student imputs */}
+      {user.role === 'student' ? (
+        <>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2">
+            <Input
+              fullWidth
+              type="text"
+              label="DNI"
+              variant="bordered"
+              name="dni"
+              value={userData.dni}
+              onChange={handleChange}
+            />
+            <Input
+              type="text"
+              label="Dirección"
+              variant="bordered"
+              name="address"
+              value={userData.address}
+              onChange={handleChange}
+              fullWidth
+            />
+          </div>
+
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2">
+            <Input
+              type="date"
+              variant="bordered"
+              label="Fecha de nacimiento"
+              placeholder="Select date"
+              name="birthdate"
+              value={userData.birthdate}
+              onChange={handleChange}
+              fullWidth
+            />
+            <RadioGroup value={selected} onValueChange={setSelected}>
+              <Radio value="m" defaultChecked>
+                Masculino
+              </Radio>
+              <Radio value="f">Femenino</Radio>
+            </RadioGroup>
+          </div>
+        </>
+      ) : null}
+      {user.role === 'student' ? (
+        ''
+      ) : (
+        <Button
+          color="success"
+          onClick={handleSubmit}
+          type="button"
+          className="w-32 text-center"
+        >
+          Guardar cambios
+        </Button>
+      )}
     </form>
   )
 }

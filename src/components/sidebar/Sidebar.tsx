@@ -4,6 +4,9 @@ import Logout from '../logout/Logout'
 import { getServerSession, AuthOptions } from 'next-auth'
 import AdminListOptions from './AdminListOptions'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
+import TeacherListOptions from './TeacherListOptions'
+import StudentListOptions from './StudentListOptions'
+import ParentListOptions from './ParentListOptions'
 
 async function Sidebar() {
   const session = await getServerSession(authOptions)
@@ -11,6 +14,9 @@ async function Sidebar() {
 
   const data: any = {
     admin: <AdminListOptions />,
+    teacher: <TeacherListOptions />,
+    student: <StudentListOptions />,
+    parent: <ParentListOptions />,
   }
   return (
     <aside
