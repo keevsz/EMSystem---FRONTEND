@@ -2,7 +2,7 @@
 //   'http://localhost:3001' ||
 //   process.env.API_URL ||
 //   'https://emsystem.onrender.com'
-const BACKEND_URL = process.env.API_URL || 'https://emsystem.onrender.com'
+const BACKEND_URL = process.env.API_URL || 'https://emsystem2.onrender.com'
 
 export async function fetchSchoolYears(accessToken: string) {
   const res = await fetch(`${BACKEND_URL}/school-year`, {
