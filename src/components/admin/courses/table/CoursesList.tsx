@@ -190,7 +190,7 @@ function CoursesList({ courses }: Props) {
                 <th className="px-6 py-3">Acciones</th>
               </tr>
             </thead>
-            <tbody className="h-64 overflow-y-auto">
+            <tbody className="max-h-64 overflow-y-auto">
               {coursesFiltered?.map((course) => {
                 return (
                   <tr
