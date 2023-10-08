@@ -1,5 +1,6 @@
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import {
+  fetchParentDetails,
   fetchStudentDetails,
   fetchTeacherDetails,
   fetchUsersDetails,
@@ -24,6 +25,11 @@ async function ProfilePage() {
     )
   } else if (data?.user.role === 'student') {
     user = await fetchStudentDetails(
+      data?.backendTokens.accessToken!,
+      data.user._id
+    )
+  } else if (data?.user.role === 'parent') {
+    user = await fetchParentDetails(
       data?.backendTokens.accessToken!,
       data.user._id
     )

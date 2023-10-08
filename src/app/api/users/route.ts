@@ -1,4 +1,4 @@
-import { ITeacher, IUser } from '@/types/user'
+import { IParent, ITeacher, IUser } from '@/types/user'
 import axios from 'axios'
 
 // const BACKEND_URL = 'http://localhost:3001' || process.env.API_URL || 'https://emsystem.onrender.com'
@@ -94,6 +94,24 @@ export async function fetchStudentDetails(accessToken: string, id: string) {
   return data
 }
 
+export async function fetchParentDetails(accessToken: string, id: string) {
+  const res = await fetch(`${BACKEND_URL}/parents/${id}`, {
+    method: 'GET',
+    headers: {
+      authorization: `Bearer ${accessToken}`,
+    },
+  })
+  const data = await res.json()
+  if (
+    data.statusCode === 403 ||
+    data.statusCode === 401 ||
+    data.statusCode === 400
+  ) {
+    throw new Error(data.message)
+  }
+  return data
+}
+
 export async function fetchDeleteUser(accessToken: string, id: string) {
   const res = await fetch(`${BACKEND_URL}/users/${id}`, {
     method: 'DELETE',
@@ -161,7 +179,7 @@ export async function fetchEditUser(
 
 export async function fetchUpdateProfile(
   accessToken: string,
-  userData: IUser & ITeacher,
+  userData: IUser & ITeacher & IParent,
   userId: string
 ) {
   const res = await fetch(`${BACKEND_URL}/users/profile/${userId}`, {

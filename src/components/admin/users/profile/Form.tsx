@@ -4,20 +4,19 @@ import React, { useState } from 'react'
 import { Button, Input, Radio, RadioGroup } from '@nextui-org/react'
 import { fetchUpdateProfile, fetchUploadImg } from '@/app/api/users/route'
 import { useSession } from 'next-auth/react'
-import { IStudent, ITeacher, IUser } from '@/types/user'
+import { IParent, IStudent, ITeacher, IUser } from '@/types/user'
 import { toast } from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 
 interface Props {
-  user: ITeacher & IUser & IStudent
+  user: ITeacher & IUser & IStudent & IParent
 }
 
 function Form({ user }: Props) {
-  console.log({ user })
   const { data, update } = useSession()
 
-  const INITIAL_DATA: IUser & ITeacher & IStudent = {
+  const INITIAL_DATA: IUser & ITeacher & IStudent & IParent = {
     firstName: user?.firstName,
     lastName: user?.lastName,
     username: user?.username,
@@ -32,11 +31,12 @@ function Form({ user }: Props) {
     role: user?.role,
     address: user?.address,
     dni: user?.dni,
+    relation: user?.relation,
   }
 
-  const [userData, setUserData] = useState<IUser & ITeacher & IStudent>(
-    INITIAL_DATA
-  )
+  const [userData, setUserData] = useState<
+    IUser & ITeacher & IStudent & IParent
+  >(INITIAL_DATA)
   const [pic, setPic] = useState<any>(user.avatar)
   const [selected, setSelected] = React.useState(user.gender || 'm')
 
@@ -62,6 +62,8 @@ function Form({ user }: Props) {
       phoneNumber: userData.phoneNumber,
       avatar: picToSend,
       role: user.role,
+      relation: userData.relation,
+      dni: userData.dni,
     }
 
     await fetchUpdateProfile(
@@ -236,6 +238,53 @@ function Form({ user }: Props) {
               </Radio>
               <Radio value="f">Femenino</Radio>
             </RadioGroup>
+          </div>
+        </>
+      ) : null}
+
+      {/* //TODO: Parent imputs */}
+      {user.role === 'parent' ? (
+        <>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2">
+            <Input
+              fullWidth
+              type="text"
+              label="email"
+              variant="bordered"
+              name="email"
+              value={userData.email}
+              onChange={handleChange}
+            />
+            <Input
+              type="text"
+              label="Teléfono celular"
+              variant="bordered"
+              name="phoneNumber"
+              value={userData.phoneNumber}
+              onChange={handleChange}
+              fullWidth
+            />
+          </div>
+
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2">
+            <Input
+              fullWidth
+              type="text"
+              label="DNI"
+              variant="bordered"
+              name="dni"
+              value={userData.dni}
+              onChange={handleChange}
+            />
+            <Input
+              type="text"
+              label="Relación con hijo"
+              variant="bordered"
+              name="relation"
+              value={userData.relation}
+              onChange={handleChange}
+              fullWidth
+            />
           </div>
         </>
       ) : null}
