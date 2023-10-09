@@ -15,6 +15,7 @@ import { fetchCreateCourse, fetchEditCourse } from '@/app/api/courses/route'
 import { useSession } from 'next-auth/react'
 import { EditIcon } from '../../users/table/EditIcon'
 import toast from 'react-hot-toast'
+import { Course } from '@/types/course'
 interface Props {
   courses: Course[]
 }

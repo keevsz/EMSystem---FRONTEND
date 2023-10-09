@@ -1,8 +1,10 @@
-// const BACKEND_URL =
-//   'http://localhost:3001' ||
-//   process.env.API_URL ||
-//   'https://emsystem.onrender.com'
-const BACKEND_URL = process.env.API_URL || 'https://emsystem2.onrender.com'
+import { Course, ITeacherCourse } from '@/types/course'
+
+const BACKEND_URL =
+  'http://localhost:3001' ||
+  process.env.API_URL ||
+  'https://emsystem.onrender.com'
+// const BACKEND_URL = process.env.API_URL || 'https://emsystem2.onrender.com'
 
 export async function fetchSchoolYears(accessToken: string) {
   const res = await fetch(`${BACKEND_URL}/school-year`, {
@@ -105,6 +107,55 @@ export async function fetchEditCourse(
     data.statusCode === 400
   ) {
     throw new Error(data.message)
+  }
+  return data
+}
+
+export async function fetchTeacherCourses(
+  accessToken: string,
+  filterData: Partial<ITeacherCourse>
+) {
+  const res = await fetch(`${BACKEND_URL}/teacher-course/filtered`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: `Bearer ${accessToken}`,
+    },
+    body: JSON.stringify(filterData),
+  })
+  const data = await res.json()
+  if (
+    data.statusCode === 403 ||
+    data.statusCode === 401 ||
+    data.statusCode === 400
+  ) {
+    throw new Error(data.message)
+  }
+  return data
+}
+
+export async function fetchCreateTeacherCourse(
+  accessToken: string,
+  teacherCourseData: any
+) {
+  const res = await fetch(`${BACKEND_URL}/teacher-course`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: `Bearer ${accessToken}`,
+    },
+    body: JSON.stringify(teacherCourseData),
+  })
+  const data = await res.json()
+  if (
+    data.statusCode === 403 ||
+    data.statusCode === 401 ||
+    data.statusCode === 400
+  ) {
+    throw new Error(data.message)
+  }
+  if (data.statusCode === 500) {
+    throw new Error('Seleccione el curso y el profesor')
   }
   return data
 }

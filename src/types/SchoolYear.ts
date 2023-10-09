@@ -1,5 +1,5 @@
 interface ISchoolYear {
-  _id: string
+  _id?: string
   year: number
 }
 

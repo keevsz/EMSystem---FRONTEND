@@ -1,29 +1,152 @@
 'use client'
+import {
+  fetchCreateTeacherCourse,
+  fetchTeacherCourses,
+} from '@/app/api/courses/route'
+import { fetchCreateSchoolYear } from '@/app/api/users/route'
 import BtnBackComponent from '@/components/common/BtnBackComponent'
-import { Card, CardBody } from '@nextui-org/react'
-import { useState } from 'react'
+import { Course, ITeacherCourse } from '@/types/course'
+import { ITeacher } from '@/types/user'
+import {
+  Button,
+  Card,
+  CardBody,
+  Input,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  Select,
+  SelectItem,
+  useDisclosure,
+} from '@nextui-org/react'
+import { useSession } from 'next-auth/react'
+import { useEffect, useState } from 'react'
+import toast from 'react-hot-toast'
 
 interface Props {
   schoolYears: ISchoolYear[]
   degrees: IDegree[]
+  courses: Course[]
+  teachers: ITeacher[]
 }
 
-function SchoolYears({ schoolYears, degrees }: Props) {
+function SchoolYears({ schoolYears, degrees, courses, teachers }: Props) {
+  const { data: session, status, update } = useSession()
+
+  const [sy, setSy] = useState(schoolYears)
+
   const [page, setPage] = useState(0)
-  const [info, setInfo] = useState({})
+  const [info, setInfo] = useState<any>({
+    course: '',
+    degree: {},
+    schoolYear: {},
+    teacher: '',
+  })
+
+  const [newYear, setNewYear] = useState(0)
+
+  const { isOpen, onOpen, onOpenChange } = useDisclosure()
+
+  const submitNewSchoolYear = async () => {
+    const newSy = await fetchCreateSchoolYear(
+      session?.backendTokens.accessToken!,
+      {
+        year: newYear,
+      }
+    )
+    setSy(sy.concat(newSy))
+    setNewYear(0)
+  }
+
+  const handleSubmit = async () => {
+    if (newYear === 0) return
+    toast.promise(submitNewSchoolYear(), {
+      loading: 'Guardando...',
+      success: <b>Cambios guardados.</b>,
+      error: (error) => {
+        setNewYear(0)
+        return <b>{error.toString()}</b>
+      },
+    })
+  }
+
+  const [teacherCourse, setTeacherCourse] = useState([])
+
+  const handleFetchCourses = async () => {
+    const { degree, schoolYear } = {
+      degree: info.degree._id,
+      schoolYear: info.schoolYear._id,
+    }
+    const coursesResponse = await fetchTeacherCourses(
+      session?.backendTokens.accessToken!,
+      { degree, schoolYear }
+    )
+    setTeacherCourse(coursesResponse)
+  }
+
+  const [newTeacherCourse, setNewTeacherCourse] = useState({
+    degree: '',
+    schoolYear: '',
+    course: '',
+    teacher: '',
+  })
+
+  const fetchCreateTeacherCourseFN = async (onClose: () => void) => {
+    await fetchCreateTeacherCourse(
+      session?.backendTokens.accessToken!,
+      newTeacherCourse
+    )
+    onClose()
+    handleFetchCourses()
+  }
+  const handleSubmitFormTeacherCourse = async (onClose: () => void) => {
+    toast.promise(fetchCreateTeacherCourseFN(onClose), {
+      loading: 'Guardando...',
+      success: <b>Agregado correctamente.</b>,
+      error: (error) => <b>{error.toString()}</b>,
+    })
+  }
+
+  useEffect(() => {
+    if (page > 0) {
+      handleFetchCourses()
+      setNewTeacherCourse({
+        ...newTeacherCourse,
+        degree: info.degree._id,
+        schoolYear: info.schoolYear._id,
+      })
+    }
+  }, [info.schoolYear, info.degree])
 
   const yearsSchoolComponent = (
-    <div className='flex flex-col gap-2'>
-      <div className="text-xl font-bold">Años escolares</div>
+    <div className="flex flex-col gap-2">
+      <div className="text-xl font-bold flex gap-5 justify-between">
+        <div>Años escolares</div>
+        <div className="flex gap-4">
+          <Input
+            value={newYear.toString()}
+            onChange={(e) => {
+              setNewYear(+e.target.value)
+            }}
+            type="number"
+            variant="bordered"
+            placeholder="Nuevo año"
+          />
+          <Button onClick={handleSubmit}>Nuevo año</Button>
+        </div>
+      </div>
       <div className="divide-x-4"></div>
       <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 grid-cols-2 gap-4 gap-y-4"'>
-        {schoolYears
+        {sy
           .sort((a, b) => b.year - a.year)
           .map((SchoolYear) => (
             <Card key={SchoolYear.year}>
               <CardBody
                 onClick={() => {
                   setPage(1)
+                  setInfo({ ...info, schoolYear: SchoolYear })
                 }}
                 className="text-center cursor-pointer hover:opacity-50"
               >
@@ -36,7 +159,7 @@ function SchoolYears({ schoolYears, degrees }: Props) {
   )
 
   const degreesComponent = (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-6">
       <div className="flex gap-2">
         <div
           className="w-min"
@@ -51,21 +174,143 @@ function SchoolYears({ schoolYears, degrees }: Props) {
       <div>
         <div className="divide-x-4"></div>
         <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 grid-cols-2 gap-4 gap-y-4"'>
-          {degrees.map((degree) => (
-            <Card key={degree._id}>
-              <CardBody className="text-center cursor-pointer hover:opacity-50">
-                {degree.grade}° {degree.level}
-              </CardBody>
-            </Card>
-          ))}
+          {degrees
+            .sort((a, b) => a.grade - b.grade)
+            .map((degree) => (
+              <Card key={degree._id}>
+                <CardBody
+                  onClick={() => {
+                    setInfo({ ...info, degree: degree })
+                    setPage(2)
+                  }}
+                  className="text-center cursor-pointer hover:opacity-50"
+                >
+                  {degree.grade}° {degree.level}
+                </CardBody>
+              </Card>
+            ))}
         </div>
       </div>
     </div>
   )
 
-  const pages = [yearsSchoolComponent, degreesComponent]
+  const coursesComponent = (
+    <div className="flex flex-col gap-6">
+      <div className="flex gap-2">
+        <div className="flex">
+          <div
+            className="w-min"
+            onClick={() => {
+              setPage(1)
+            }}
+          >
+            <BtnBackComponent />
+          </div>
+          <div className="text-xl font-bold">
+            Asignar: {info.schoolYear.year} - {info.degree.grade}° de{' '}
+            {info.degree.level}
+          </div>
+        </div>
+      </div>
+      <div>
+        <Button
+          color="primary"
+          onPress={() => {
+            onOpen()
+          }}
+        >
+          Registrar nuevo
+        </Button>
 
-  return <>{pages[page]}</>
+        <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+          <ModalContent>
+            {(onClose) => (
+              <>
+                <ModalHeader className="flex flex-col gap-1">
+                  {info.schoolYear.year} - {info.degree.grade}° de{' '}
+                  {info.degree.level}
+                </ModalHeader>
+                <ModalBody>
+                  <Select
+                    items={courses}
+                    label="Curso"
+                    placeholder="Selecciona un curso"
+                    onChange={(e) => {
+                      setNewTeacherCourse({
+                        ...newTeacherCourse,
+                        course: e.target.value,
+                      })
+                    }}
+                  >
+                    {(course) => (
+                      <SelectItem key={course._id!}>{course.name}</SelectItem>
+                    )}
+                  </Select>
+
+                  <Select
+                    items={teachers}
+                    label="Profesor"
+                    placeholder="Seleccionar un profesor"
+                    onChange={(e) => {
+                      setNewTeacherCourse({
+                        ...newTeacherCourse,
+                        teacher: e.target.value,
+                      })
+                    }}
+                  >
+                    {(teacher) => (
+                      <SelectItem key={teacher._id!}>
+                        {teacher.user.lastName}
+                      </SelectItem>
+                    )}
+                  </Select>
+                </ModalBody>
+                <ModalFooter>
+                  <Button
+                    color="danger"
+                    variant="light"
+                    onPress={() => {
+                      onClose()
+                    }}
+                  >
+                    Cancelar
+                  </Button>
+                  <Button
+                    color="primary"
+                    onPress={() => {
+                      handleSubmitFormTeacherCourse(onClose)
+                    }}
+                  >
+                    Registrar
+                  </Button>
+                </ModalFooter>
+              </>
+            )}
+          </ModalContent>
+        </Modal>
+      </div>
+      {teacherCourse?.length ? (
+        <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 grid-cols-2 gap-4 gap-y-4"'>
+          {teacherCourse.map((c: ITeacherCourse) => (
+            <Card key={c._id}>
+              <CardBody className="text-center cursor-pointer hover:opacity-50">
+                <div className="text-lg font-bold">{c.course.name}</div>
+                <div>{c.teacher.user.firstName}</div>
+              </CardBody>
+            </Card>
+          ))}
+        </div>
+      ) : (
+        <div className="h-24 text-xl font-semibold flex justify-center items-center">
+          Aún no se han registrado cursos
+        </div>
+      )}
+    </div>
+  )
+
+  const pages = [yearsSchoolComponent, degreesComponent, coursesComponent]
+
+  return pages[page]
 }
 
 export default SchoolYears
