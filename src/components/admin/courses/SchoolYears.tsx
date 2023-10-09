@@ -309,7 +309,6 @@ function SchoolYears({ schoolYears, degrees, courses, teachers }: Props) {
   )
 
   const pages = [yearsSchoolComponent, degreesComponent, coursesComponent]
-
   return pages[page]
 }
 
