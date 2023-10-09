@@ -260,7 +260,7 @@ function SchoolYears({ schoolYears, degrees, courses, teachers }: Props) {
                   >
                     {(teacher) => (
                       <SelectItem key={teacher._id!}>
-                        {teacher.user.lastName}
+                        {teacher.user!.lastName}
                       </SelectItem>
                     )}
                   </Select>
@@ -295,7 +295,7 @@ function SchoolYears({ schoolYears, degrees, courses, teachers }: Props) {
             <Card key={c._id}>
               <CardBody className="text-center cursor-pointer hover:opacity-50">
                 <div className="text-lg font-bold">{c.course.name}</div>
-                <div>{c.teacher.user.firstName}</div>
+                <div>{c.teacher.user!.firstName}</div>
               </CardBody>
             </Card>
           ))}

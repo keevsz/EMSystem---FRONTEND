@@ -21,7 +21,7 @@ export interface ITeacher extends Partial<IUser> {
   phoneNumber: string
   birthdate: string
   gender: string
-  user: IUser
+  user?: IUser
 }
 
 export interface IStudent extends Partial<IUser> {
