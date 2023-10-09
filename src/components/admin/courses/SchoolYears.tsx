@@ -202,6 +202,7 @@ function SchoolYears({ schoolYears, degrees, courses, teachers }: Props) {
             className="w-min"
             onClick={() => {
               setPage(1)
+              setTeacherCourse([])
             }}
           >
             <BtnBackComponent />
