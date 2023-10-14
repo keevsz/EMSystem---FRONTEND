@@ -1,5 +1,6 @@
 'use client'
 import {
+  fetchCourses,
   fetchCreateTeacherCourse,
   fetchTeacherCourses,
 } from '@/app/api/courses/route'
@@ -36,6 +37,8 @@ function SchoolYears({ schoolYears, degrees, courses, teachers }: Props) {
   const { data: session, status, update } = useSession()
 
   const [sy, setSy] = useState(schoolYears)
+
+  const [updatedCourses, setUpdatedCourses] = useState(courses)
 
   const [page, setPage] = useState(0)
   const [info, setInfo] = useState<any>({
@@ -118,7 +121,7 @@ function SchoolYears({ schoolYears, degrees, courses, teachers }: Props) {
         schoolYear: info.schoolYear._id,
       })
     }
-  }, [info.schoolYear, info.degree])
+  }, [info.schoolYear, info.degree, page])
 
   const yearsSchoolComponent = (
     <div className="flex flex-col gap-2">
@@ -201,8 +204,8 @@ function SchoolYears({ schoolYears, degrees, courses, teachers }: Props) {
           <div
             className="w-min"
             onClick={() => {
-              setPage(1)
               setTeacherCourse([])
+              setPage(1)
             }}
           >
             <BtnBackComponent />
@@ -216,8 +219,12 @@ function SchoolYears({ schoolYears, degrees, courses, teachers }: Props) {
       <div>
         <Button
           color="primary"
-          onPress={() => {
+          onPress={async () => {
             onOpen()
+            let coursesUpdated = await fetchCourses(
+              session?.backendTokens.accessToken!
+            )
+            setUpdatedCourses(coursesUpdated)
           }}
         >
           Registrar nuevo
@@ -233,7 +240,7 @@ function SchoolYears({ schoolYears, degrees, courses, teachers }: Props) {
                 </ModalHeader>
                 <ModalBody>
                   <Select
-                    items={courses}
+                    items={updatedCourses}
                     label="Curso"
                     placeholder="Selecciona un curso"
                     onChange={(e) => {

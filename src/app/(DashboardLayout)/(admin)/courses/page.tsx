@@ -19,7 +19,12 @@ async function CoursesPage() {
   return (
     <div className="flex flex-col gap-6">
       <CoursesList courses={courses}></CoursesList>
-      <SchoolYears teachers={teachers} courses={courses} schoolYears={schoolYears} degrees={degrees}></SchoolYears>
+      <SchoolYears
+        teachers={teachers}
+        courses={courses}
+        schoolYears={schoolYears}
+        degrees={degrees}
+      ></SchoolYears>
     </div>
   )
 }
