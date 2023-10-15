@@ -6,9 +6,25 @@ import { ITuition } from "@/types/tuition"
 //   'https://emsystem.onrender.com'
 const BACKEND_URL = process.env.API_URL || 'https://emsystem2.onrender.com'
 
+export interface ITuitionRequest {
+  parentName:        string;
+  parentLastname:    string;
+  parentDni:         string;
+  parentEmail:       string;
+  parentPhoneNumber: string;
+  studentName:       string;
+  studentLastname:   string;
+  studentDni:        string;
+  studentBirthdate:  string;
+  studentAddress:    string;
+  studentGender:     string;
+  schoolYear:        string;
+  degree:            string;
+}
+
 export async function fetchCreateTuitionAdmin(
     accessToken: string,
-    tuitionData: any
+    tuitionData: ITuitionRequest
   ) {
     const res = await fetch(`${BACKEND_URL}/tuitions/admin`, {
       method: 'POST',

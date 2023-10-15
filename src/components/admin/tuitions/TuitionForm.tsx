@@ -20,7 +20,7 @@ import BtnBackComponent from '@/components/common/BtnBackComponent'
 import { ITuition } from '@/types/tuition'
 import { fetchExternalUserByDNI } from '@/app/api/users/route'
 import toast from 'react-hot-toast'
-import { fetchCreateTuitionAdmin } from '@/app/api/tuitions/route'
+import { fetchCreateTuitionAdmin } from '@/app/api/tuitions/tuitionAPI'
 
 interface Props {
   schoolYears: ISchoolYear[]
