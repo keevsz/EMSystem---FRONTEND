@@ -6,7 +6,7 @@ import {
 } from '@/app/api/courses/route'
 import { fetchCreateSchoolYear } from '@/app/api/users/route'
 import BtnBackComponent from '@/components/common/BtnBackComponent'
-import { Course, ITeacherCourse } from '@/types/course'
+import { Course, IStudentTeacherCourse, ITeacherCourse } from '@/types/course'
 import { ITeacher } from '@/types/user'
 import {
   Button,
@@ -20,6 +20,12 @@ import {
   ModalHeader,
   Select,
   SelectItem,
+  Table,
+  TableBody,
+  TableCell,
+  TableColumn,
+  TableHeader,
+  TableRow,
   useDisclosure,
 } from '@nextui-org/react'
 import { useSession } from 'next-auth/react'
@@ -39,7 +45,7 @@ function SchoolYears({ schoolYears, degrees, courses, teachers }: Props) {
   const [sy, setSy] = useState(schoolYears)
 
   const [updatedCourses, setUpdatedCourses] = useState(courses)
-
+  const [courseName, setCourseName] = useState('')
   const [page, setPage] = useState(0)
   const [info, setInfo] = useState<any>({
     course: '',
@@ -88,6 +94,10 @@ function SchoolYears({ schoolYears, degrees, courses, teachers }: Props) {
     )
     setTeacherCourse(coursesResponse)
   }
+
+  const [studentTeacherCourseData, setStudentTeacherCourseData] = useState<
+    IStudentTeacherCourse[]
+  >([])
 
   const [newTeacherCourse, setNewTeacherCourse] = useState({
     degree: '',
@@ -301,7 +311,14 @@ function SchoolYears({ schoolYears, degrees, courses, teachers }: Props) {
         <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 grid-cols-2 gap-4 gap-y-4"'>
           {teacherCourse.map((c: ITeacherCourse) => (
             <Card key={c._id}>
-              <CardBody className="text-center cursor-pointer hover:opacity-50">
+              <CardBody
+                onClick={() => {
+                  setPage(3)
+                  setStudentTeacherCourseData(c.students!)
+                  setCourseName(c.course.name)
+                }}
+                className="text-center cursor-pointer hover:opacity-50"
+              >
                 <div className="text-lg font-bold">{c.course.name}</div>
                 <div>{c.teacher.user!.firstName}</div>
               </CardBody>
@@ -310,13 +327,62 @@ function SchoolYears({ schoolYears, degrees, courses, teachers }: Props) {
         </div>
       ) : (
         <div className="h-24 text-xl font-semibold flex justify-center items-center">
-          Aún no se han registrado cursos
+          Aún no se han registrado alumnos
         </div>
       )}
     </div>
   )
 
-  const pages = [yearsSchoolComponent, degreesComponent, coursesComponent]
+  const studentTeacherCourse = (
+    <div className="flex flex-col gap-6">
+      <div className="flex gap-2">
+        <div
+          className="w-min"
+          onClick={() => {
+            setPage(2)
+            setStudentTeacherCourseData([])
+          }}
+        >
+          <BtnBackComponent />
+        </div>
+        <div className="text-xl font-bold">
+          {info.schoolYear.year} | {info.degree.grade}° de {info.degree.level} |{' '}
+          {courseName}
+        </div>
+      </div>
+      <div>
+        <div className="divide-x-4"></div>
+        <div className="font-semibold text-lg">Estudiantes</div>
+        <Table aria-label="Example static collection table">
+          <TableHeader>
+            <TableColumn>Nombres y apellidos</TableColumn>
+            <TableColumn>Nombre de usuario</TableColumn>
+            <TableColumn>DNI</TableColumn>
+          </TableHeader>
+          <TableBody>
+            {studentTeacherCourseData.map((stc) => {
+              return (
+                <TableRow key={stc._id}>
+                  <TableCell>
+                    {stc.user.firstName} {stc.user.lastName}
+                  </TableCell>
+                  <TableCell>{stc.user.username}</TableCell>
+                  <TableCell>{stc.dni}</TableCell>
+                </TableRow>
+              )
+            })}
+          </TableBody>
+        </Table>
+      </div>
+    </div>
+  )
+
+  const pages = [
+    yearsSchoolComponent,
+    degreesComponent,
+    coursesComponent,
+    studentTeacherCourse,
+  ]
   return pages[page]
 }
 

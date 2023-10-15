@@ -1,4 +1,4 @@
-import { ITeacher } from "./user"
+import { ITeacher, IUser } from './user'
 
 export interface Course {
   _id?: string
@@ -9,11 +9,20 @@ export interface Course {
   slug?: string
 }
 
-export interface ITeacherCourse{
-  _id: string,
-  degree: IDegree,
-  schoolYear: ISchoolYear,
-  course: Course,
-  teacher: ITeacher,
-  students?: string[]
+export interface ITeacherCourse {
+  _id: string
+  degree: IDegree
+  schoolYear: ISchoolYear
+  course: Course
+  teacher: ITeacher
+  students?: IStudentTeacherCourse[]
+}
+
+export interface IStudentTeacherCourse {
+  _id: string
+  dni: string
+  birthdate: Date
+  address: string
+  gender: string
+  user: IUser
 }

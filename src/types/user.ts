@@ -40,3 +40,11 @@ export interface IParent extends Partial<IUser> {
   students?: string[]
 }
 
+export interface IUserDataFromExteralAPI {
+  nombres: string
+  apellidoPaterno: string
+  apellidoMaterno: string
+  tipoDocumento: string
+  numeroDocumento: string
+  digitoVerificador: string
+}

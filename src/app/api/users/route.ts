@@ -1,8 +1,11 @@
 import { IParent, ITeacher, IUser } from '@/types/user'
 import axios from 'axios'
 
-const BACKEND_URL = 'http://localhost:3001' || process.env.API_URL || 'https://emsystem.onrender.com'
-// const BACKEND_URL = process.env.API_URL || 'https://emsystem2.onrender.com'
+// const BACKEND_URL =
+//   'http://localhost:3001' ||
+//   process.env.API_URL ||
+//   'https://emsystem.onrender.com'
+const BACKEND_URL = process.env.API_URL || 'https://emsystem2.onrender.com'
 
 export async function fetchAllUsers(accessToken: string) {
   const res = await fetch(`${BACKEND_URL}/users`, {
@@ -214,7 +217,10 @@ export const fetchUploadImg = async (files: any) => {
   return responseData
 }
 
-export async function fetchCreateSchoolYear(accessToken: string, syData: ISchoolYear){
+export async function fetchCreateSchoolYear(
+  accessToken: string,
+  syData: ISchoolYear
+) {
   const res = await fetch(`${BACKEND_URL}/school-year`, {
     method: 'POST',
     headers: {
@@ -247,6 +253,26 @@ export async function fetchAllTeachers(accessToken: string) {
     data.statusCode === 401 ||
     data.statusCode === 400
   ) {
+    throw new Error(data.message)
+  }
+  return data
+}
+
+export async function fetchExternalUserByDNI(accessToken: string, dni: string) {
+  const res = await fetch(`${BACKEND_URL}/users/dni/${dni}`, {
+    method: 'GET',
+    headers: {
+      authorization: `Bearer ${accessToken}`,
+    },
+  })
+  const data = await res.json()
+  if (
+    data.statusCode === 403 ||
+    data.statusCode === 401 ||
+    data.statusCode === 400 ||
+    data.statusCode === 422
+  ) {
+    console.log({ data })
     throw new Error(data.message)
   }
   return data
