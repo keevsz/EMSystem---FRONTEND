@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import React from 'react'
 import Logout from '../logout/Logout'
 import { getServerSession, AuthOptions } from 'next-auth'
@@ -7,6 +6,7 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import TeacherListOptions from './TeacherListOptions'
 import StudentListOptions from './StudentListOptions'
 import ParentListOptions from './ParentListOptions'
+import ChatBotBox from '../chatbot/ui'
 
 async function Sidebar() {
   const session = await getServerSession(authOptions)
@@ -27,6 +27,7 @@ async function Sidebar() {
       <div className="h-full px-3 pb-4 overflow-y-auto bg-slate-100 dark:bg-gray-800">
         <div className="flex flex-col space-y-2 font-medium h-full justify-between">
           {data[role!]}
+          {role === 'admin' && <ChatBotBox />}
           <Logout />
         </div>
       </div>

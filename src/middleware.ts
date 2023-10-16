@@ -12,6 +12,7 @@ export const config = {
     '/parent/students',
     '/student/courses',
     '/profile',
-    "/tuitions"
+    '/tuitions',
+    '/teacher/courses',
   ],
 }
