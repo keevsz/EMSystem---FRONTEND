@@ -21,6 +21,8 @@ import { ITuition } from '@/types/tuition'
 import { fetchExternalUserByDNI } from '@/app/api/users/route'
 import toast from 'react-hot-toast'
 import { fetchCreateTuitionAdmin } from '@/app/api/tuitions/tuitionAPI'
+import { PDFViewer } from '@react-pdf/renderer'
+import Link from 'next/link'
 
 interface Props {
   schoolYears: ISchoolYear[]
@@ -30,12 +32,12 @@ interface Props {
 const TUITION_INITIAL_DATA: ITuition = {
   parentName: '',
   parentLastname: '',
-  parentDni: '',
+  parentDni: '74207469',
   parentEmail: '',
   parentPhoneNumber: '',
   studentName: '',
   studentLastname: '',
-  studentDni: '',
+  studentDni: '71515308',
   studentBirthdate: '',
   studentAddress: '',
   studentGender: '',
@@ -60,6 +62,9 @@ function TuitionForm({ schoolYears, degrees }: Props) {
   const [loading2, setLoading2] = useState(false)
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
+
+  const [viewPdf, setViewPdf] = useState(false)
+  const [newTuition, setNewTuition] = useState<any>({})
 
   const schoolYearsC = () => {
     return (
@@ -263,13 +268,15 @@ function TuitionForm({ schoolYears, degrees }: Props) {
       schoolYear: tuitionData.schoolYear._id,
       degree: tuitionData.degree._id,
     }
-    await fetchCreateTuitionAdmin(
+    const newTuition = await fetchCreateTuitionAdmin(
       session?.backendTokens!.accessToken!,
       tuitionDataFormatted
     )
+    setNewTuition(newTuition)
     onClose()
     setTuitionData(TUITION_INITIAL_DATA)
     setPage(0)
+    setViewPdf(true)
   }
 
   const handleSubmit = async (onClose: any) => {
@@ -509,6 +516,15 @@ function TuitionForm({ schoolYears, degrees }: Props) {
           )}
         </ModalContent>
       </Modal>
+
+      {viewPdf && (
+        <a
+          target="_blank"
+          href={`/pdf/${newTuition._id}`}
+        >
+          PDF
+        </a>
+      )}
     </div>
   )
 }

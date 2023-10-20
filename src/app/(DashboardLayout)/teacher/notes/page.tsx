@@ -1,7 +1,7 @@
-function NotesPage() {
+function TeacherNotesPage() {
   return (
-    <div>NotesPage</div>
+    <div>TeacherNotesPage</div>
   )
 }
 
-export default NotesPage
+export default TeacherNotesPage

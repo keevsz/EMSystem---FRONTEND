@@ -5,7 +5,7 @@ import { io } from 'socket.io-client'
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 
-const socket = io('https://emsystem2.onrender.com', {
+const socket = io('http://localhost:3001', {
   reconnectionDelayMax: 10000,
 })
 

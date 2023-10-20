@@ -13,8 +13,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body>
+    <html lang="en" className="overflow-auto">
+      <body className="overflow-auto">
         <Providers>{children}</Providers>
       </body>
     </html>
