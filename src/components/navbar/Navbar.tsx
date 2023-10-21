@@ -4,14 +4,10 @@ import Link from 'next/link'
 import SchoolPng from '../../../public/school.png'
 import {
   Avatar,
-  Button,
   Dropdown,
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
 } from '@nextui-org/react'
 import { signOut, useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'

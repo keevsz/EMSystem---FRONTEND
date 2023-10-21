@@ -1,23 +1,99 @@
 'use client'
 
-import { Card, Divider } from '@nextui-org/react'
+import {
+  fetchDegrees,
+  fetchSchoolYears,
+  fetchTeacherCourses,
+} from '@/app/api/courses/route'
+import { ITeacherCourse } from '@/types/course'
+import { SchoolYear } from '@/types/tuition'
+import { Button, Card, Select, SelectItem } from '@nextui-org/react'
+import { useSession } from 'next-auth/react'
+import Link from 'next/link'
+import { useState, useEffect } from 'react'
 
-interface Props {
-  data: any
-}
-function Levels({ data }: Props) {
+function TeacherCourses() {
+  const { data: session } = useSession()
+  const [filter, setFilter] = useState({
+    degree: '',
+    schoolYear: '',
+  })
+  const [teacherCourses, setTeacherCourses] = useState<ITeacherCourse[]>([])
+  const [degrees, setDegrees] = useState<IDegree[]>([])
+  const [sys, setSys] = useState<SchoolYear[]>([])
+
+  const fetchSelectsData = async () => {
+    const degrees = await fetchDegrees(session?.backendTokens.accessToken!)
+    setDegrees(degrees)
+    const sy = await fetchSchoolYears(session?.backendTokens.accessToken!)
+    setSys(sy)
+  }
+
+  const fetchTeacherCoursesFn = async () => {
+    const teacherCourses = await fetchTeacherCourses(
+      session?.backendTokens.accessToken!,
+      filter
+    )
+    setTeacherCourses(teacherCourses)
+  }
+
+  useEffect(() => {
+    fetchSelectsData()
+  }, [])
+
   return (
-    <div className='flex flex-col gap-4'>
+    <div className="flex flex-col gap-4">
       <h2 className="text-xl">Nivel educativo</h2>
-      <Divider />
+
+      <div className="flex gap-5">
+        <Select
+          items={degrees}
+          label="Grado"
+          placeholder="Selecciona un grado"
+          onChange={(e) => {
+            setFilter({
+              ...filter,
+              degree: e.target.value,
+            })
+          }}
+        >
+          {(degree) => (
+            <SelectItem key={degree._id}>
+              {`${degree.level} - ${degree.grade}`}
+            </SelectItem>
+          )}
+        </Select>
+
+        <Select
+          items={sys}
+          label="Año"
+          placeholder="Selecciona un año"
+          onChange={(e) => {
+            setFilter({
+              ...filter,
+              schoolYear: e.target.value,
+            })
+          }}
+        >
+          {(sys) => <SelectItem key={sys._id}>{sys.year}</SelectItem>}
+        </Select>
+        <Button onClick={fetchTeacherCoursesFn}>Buscar</Button>
+      </div>
 
       <span></span>
       <div className="flex text-2xl gap-5">
-        {data.map((i: any, index: number) => {
+        {teacherCourses?.map((tc: ITeacherCourse, index: number) => {
           return (
-            <Card className="p-10 cursor-pointer hover:opacity-70" key={index}>
-              {i.level}
-            </Card>
+            <div key={index}>
+              <Link href={`/teacher/courses/${tc._id}`}>
+                <Card
+                  className="p-10 cursor-pointer hover:opacity-70"
+                  key={index}
+                >
+                  {tc.course.name}
+                </Card>
+              </Link>
+            </div>
           )
         })}
       </div>
@@ -25,4 +101,4 @@ function Levels({ data }: Props) {
   )
 }
 
-export default Levels
+export default TeacherCourses

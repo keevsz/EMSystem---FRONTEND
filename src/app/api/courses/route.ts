@@ -109,7 +109,10 @@ export async function fetchEditCourse(
 
 export async function fetchTeacherCourses(
   accessToken: string,
-  filterData: Partial<ITeacherCourse>
+  filterData: Partial<ITeacherCourse> | {
+    degree: string,
+    schoolYear: string,
+  }
 ) {
   const res = await fetch(`${BACKEND_URL}/teacher-course/filtered`, {
     method: 'POST',
@@ -152,6 +155,29 @@ export async function fetchCreateTeacherCourse(
   }
   if (data.statusCode === 500) {
     throw new Error('Seleccione el curso y el profesor')
+  }
+  return data
+}
+
+
+export async function fetchTeacherCourse(
+  accessToken: string,
+  teacherCourseId: string
+) {
+  const res = await fetch(`${BACKEND_URL}/teacher-course/${teacherCourseId}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: `Bearer ${accessToken}`,
+    },
+  })
+  const data = await res.json()
+  if (
+    data.statusCode === 403 ||
+    data.statusCode === 401 ||
+    data.statusCode === 400
+  ) {
+    throw new Error(data.message)
   }
   return data
 }

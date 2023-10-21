@@ -14,5 +14,6 @@ export const config = {
     '/profile',
     '/tuitions',
     '/teacher/courses',
+    '/product/(.*)',
   ],
 }
