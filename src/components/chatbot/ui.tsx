@@ -1,5 +1,15 @@
 'use client'
-import { Button, Input } from '@nextui-org/react'
+import {
+  Button,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+  Input,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@nextui-org/react'
 import React from 'react'
 import { io } from 'socket.io-client'
 import { useState, useEffect } from 'react'
@@ -59,7 +69,11 @@ function ChatBotBox() {
     })
   }, [])
 
+  const [status, setStatus] = useState(0)
+  const [open, setOpen] = useState(false)
   useEffect(() => {
+    if (!status) return
+
     let chatMessages = document.getElementById('chatMessages')!
     chatMessages.scrollTop = chatMessages.scrollHeight
     if (INITIAL_MESSAGES.length > 0) {
@@ -70,81 +84,104 @@ function ChatBotBox() {
 
       return () => clearTimeout(timer)
     }
-  }, [messages])
+  }, [messages, status])
+
+  useEffect(() => {
+    let chatMessages = document.getElementById('chatMessages')
+    if (!chatMessages) return
+    chatMessages.scrollTop = chatMessages.scrollHeight
+  }, [open])
 
   return (
-    <div className="flex flex-col content-between justify-between w-60 h-72 border-1 border-solid rounded-md">
-      <div className="flex flex-row items-center justify-between rounded-t-md p-1 px-2 text-white font-medium bg-blue-600">
-        <div>ChatBot</div>
-        <div>x</div>
-      </div>
-      <div
-        className="w-full mt-auto overflow-auto scroll-smooth"
-        id="chatMessages"
-      >
-        {messages.map((m: { user: string; message: string }, index) => {
-          if (m.user === 'bot') {
-            return (
-              <div key={index} className="p-1 pr-2">
-                <div className="flex flex-row items-center gap-2">
-                  <div>
-                    <Image
-                      src={
-                        'https://www.techopedia.com/wp-content/uploads/2023/03/6e13a6b3-28b6-454a-bef3-92d3d5529007.jpeg'
-                      }
-                      alt="bot img"
-                      className="rounded-full"
-                      width={30}
-                      height={30}
-                    />
-                  </div>
-                  <div className="bg-gray-200 rounded-md px-2 py-1 w-full">
-                    <p className="text-xs leading-4">{m.message}</p>
-                  </div>
-                </div>
-              </div>
-            )
-          } else {
-            return (
-              <div key={index} className="p-1 pr-2 flex justify-end">
-                <div className="flex flex-row items-center gap-2">
-                  <div className="bg-blue-500 rounded-md px-2 py-1">
-                    <p className="text-xs text-white leading-4">{m.message}</p>
-                  </div>
-                </div>
-              </div>
-            )
-          }
-        })}
-      </div>
-      <div>
-        <Input
-          placeholder="Preguntar..."
-          radius="sm"
-          className="rounded-lg"
-          onChange={(e) => {
-            setMessage(e.target.value)
+    <Popover placement="top">
+      <PopoverTrigger>
+        <Button
+          onClick={() => {
+            setStatus(1)
+            setOpen(!open)
           }}
-          value={message}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              sendMessageToServer()
-              setMessage('')
-              setMessages(
-                (prevMessages) =>
-                  [
-                    ...prevMessages,
-                    {
-                      user: 'user',
-                      message,
-                    },
-                  ] as never[]
-              )
-            }
-          }}
-        />
-      </div>
-    </div>
+          variant='bordered'
+          className='hover:bg-blue-600 hover:text-white'
+        >
+          Chatbot
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="m-0 p-0">
+        <div className="flex flex-col content-between justify-between w-60 h-72 border-1 border-solid rounded-md">
+          <div className="flex flex-row items-center justify-between rounded-t-md p-1 px-2 text-white font-medium bg-blue-600">
+            <div>ChatBot</div>
+          </div>
+          <div
+            className="w-full mt-auto overflow-auto scroll-smooth"
+            id="chatMessages"
+          >
+            {messages.map((m: { user: string; message: string }, index) => {
+              if (m.user === 'bot') {
+                return (
+                  <div key={index} className="p-1 pr-2">
+                    <div className="flex flex-row items-center gap-2">
+                      <div>
+                        <Image
+                          src={
+                            'https://www.techopedia.com/wp-content/uploads/2023/03/6e13a6b3-28b6-454a-bef3-92d3d5529007.jpeg'
+                          }
+                          alt="bot img"
+                          className="rounded-full"
+                          width={30}
+                          height={30}
+                        />
+                      </div>
+                      <div className="bg-gray-200 rounded-md px-2 py-1 w-full">
+                        <p className="text-xs leading-4">{m.message}</p>
+                      </div>
+                    </div>
+                  </div>
+                )
+              } else {
+                return (
+                  <div key={index} className="p-1 pr-2 flex justify-end">
+                    <div className="flex flex-row items-center gap-2">
+                      <div className="bg-blue-500 rounded-md px-2 py-1">
+                        <p className="text-xs text-white leading-4">
+                          {m.message}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )
+              }
+            })}
+          </div>
+          <div>
+            <Input
+              placeholder="Preguntar..."
+              radius="sm"
+              className="rounded-lg"
+              onChange={(e) => {
+                setMessage(e.target.value)
+              }}
+              value={message}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  sendMessageToServer()
+                  setMessage('')
+                  setMessages(
+                    (prevMessages) =>
+                      [
+                        ...prevMessages,
+                        {
+                          user: 'user',
+                          message,
+                        },
+                      ] as never[]
+                  )
+                }
+              }}
+            />
+          </div>
+        </div>
+      </PopoverContent>
+    </Popover>
   )
 }
 

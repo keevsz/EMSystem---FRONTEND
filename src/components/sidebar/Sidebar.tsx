@@ -27,8 +27,10 @@ async function Sidebar() {
       <div className="h-full px-3 pb-4 overflow-y-auto bg-slate-100 dark:bg-gray-800">
         <div className="flex flex-col space-y-2 font-medium h-full justify-between">
           {data[role!]}
-          {role === 'admin' && <ChatBotBox />}
-          <Logout />
+          <div>
+            {role === 'admin' && <ChatBotBox />}
+            <Logout />
+          </div>
         </div>
       </div>
     </aside>

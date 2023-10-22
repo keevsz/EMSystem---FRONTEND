@@ -80,22 +80,27 @@ function TeacherCourses() {
         <Button onClick={fetchTeacherCoursesFn}>Buscar</Button>
       </div>
 
-      <span></span>
-      <div className="flex text-2xl gap-5">
-        {teacherCourses?.map((tc: ITeacherCourse, index: number) => {
-          return (
-            <div key={index}>
-              <Link href={`/teacher/courses/${tc._id}`}>
-                <Card
-                  className="p-10 cursor-pointer hover:opacity-70"
-                  key={index}
-                >
-                  {tc.course.name}
-                </Card>
-              </Link>
-            </div>
-          )
-        })}
+      <div className="flex text-2xl gap-5 justify-center">
+        {teacherCourses.length ? (
+          teacherCourses?.map((tc: ITeacherCourse, index: number) => {
+            return (
+              <div key={index}>
+                <Link href={`/teacher/courses/${tc._id}`}>
+                  <Card
+                    className="p-10 cursor-pointer hover:opacity-70"
+                    key={index}
+                  >
+                    {tc.course.name}
+                  </Card>
+                </Link>
+              </div>
+            )
+          })
+        ) : (
+          <div className="flex justify-center items-center pt-10">
+            Seleccione el grado y el año
+          </div>
+        )}
       </div>
     </div>
   )

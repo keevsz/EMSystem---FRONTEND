@@ -11,13 +11,13 @@ import {
   Button,
   Card,
   CardBody,
-  Divider,
   Input,
   Spinner,
 } from '@nextui-org/react'
 import { fetchEditNotes, fetchStudentNote } from '@/app/api/notes/notesAPI'
 import { INote, IUnit } from '@/types/note'
 import toast from 'react-hot-toast'
+import BtnBack from '@/components/common/BtnBack'
 
 function TeacherCoursesStudents() {
   const params = useParams()
@@ -89,6 +89,8 @@ function TeacherCoursesStudents() {
     teacherCourse && (
       <div className="flex flex-col gap-3">
         <div className="text-xl flex flex-colr gap-3">
+          <BtnBack route="/teacher/courses"></BtnBack>
+
           <div>
             <strong>Curso: </strong> {teacherCourse?.course.name}
           </div>
