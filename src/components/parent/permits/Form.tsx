@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react'
 import { Textarea, Button, Select, SelectItem } from '@nextui-org/react'
 import { useSession } from 'next-auth/react'
 import { IStudentP, ITeacher } from '@/types/user'
-import axios from 'axios'
 import { fetchCreatePermit } from '@/app/api/permits/permitsAPI'
 import toast from 'react-hot-toast'
 

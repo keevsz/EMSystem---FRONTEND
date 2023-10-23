@@ -1,11 +1,33 @@
 'use client'
 
+import { fetchUsersCount } from '@/app/api/users/route'
 import { IUsersCount } from '@/types/user'
-import { Card, CardBody } from '@nextui-org/react'
-interface Props {
-  usersCount: IUsersCount
-}
-function UsersMain({ usersCount }: Props) {
+import { Card, CardBody, Spinner } from '@nextui-org/react'
+import { useSession } from 'next-auth/react'
+import { useEffect, useState } from 'react'
+
+function UsersMain() {
+  const [usersCount, setUsersCount] = useState<IUsersCount>()
+  const { data } = useSession()
+  const fetchUserCount = async () => {
+    const getUsersCount = await fetchUsersCount(
+      data?.backendTokens.accessToken!
+    )
+    setUsersCount(getUsersCount)
+  }
+  useEffect(() => {
+    if (!data) return
+
+    fetchUserCount()
+  }, [data])
+
+  if (!usersCount)
+    return (
+      <div className="flex justify-center items-center min-h-full">
+        <Spinner />
+      </div>
+    )
+
   return (
     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4">
       <Card className="w-full">

@@ -1,16 +1,7 @@
-import { authOptions } from '@/app/api/auth/[...nextauth]/route'
-import { fetchPermits } from '@/app/api/permits/permitsAPI'
-import { IPermit } from '@/types/permit'
-import { getServerSession } from 'next-auth'
 import Link from 'next/link'
 import React from 'react'
 
-async function TeacherListOptions() {
-  const data = await getServerSession(authOptions)
-  const permits: IPermit[] = await fetchPermits(
-    data?.backendTokens.accessToken!
-  )
-
+function TeacherListOptions() {
   return (
     <ul>
       <li>
@@ -48,11 +39,6 @@ async function TeacherListOptions() {
           <span className="flex-1 ml-3 whitespace-nowrap">
             Padres de familia
           </span>
-          {permits.filter((p) => p.status === 'sent').length > 0 && (
-            <span className="inline-flex items-center justify-center w-5 h-5 ml-2 text-xs font-semibold text-blue-800 bg-blue-200 rounded-full">
-              {permits.filter((p) => p.status === 'sent').length}
-            </span>
-          )}
         </Link>
       </li>
     </ul>
