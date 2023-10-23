@@ -6,6 +6,8 @@ import { useSession } from 'next-auth/react'
 import { IStudentP, ITeacher } from '@/types/user'
 import { fetchCreatePermit } from '@/app/api/permits/permitsAPI'
 import toast from 'react-hot-toast'
+import { useRouter } from 'next/navigation'
+
 
 interface Props {
   studentsC: IStudentP[]
@@ -21,6 +23,7 @@ export default function FormCreatePermit({ studentsC, teachersC }: Props) {
   const [data, setData] = useState(INITIAL_DATA)
 
   const { data: session, status } = useSession()
+  const router = useRouter()
 
   const fetchCreatePermitFN = async () => {
     if (
@@ -32,6 +35,8 @@ export default function FormCreatePermit({ studentsC, teachersC }: Props) {
     }
     await fetchCreatePermit(session?.backendTokens.accessToken!, data)
     setData(INITIAL_DATA)
+    router.push('/parent/permits')
+    router.refresh()
   }
 
   const createPermit = async () => {
@@ -71,7 +76,7 @@ export default function FormCreatePermit({ studentsC, teachersC }: Props) {
         >
           {(student) => (
             <SelectItem key={student.user._id!}>
-              {student.user.firstName} {student.user.lastName}
+              {student.user.firstName + ' ' + student.user.lastName}
             </SelectItem>
           )}
         </Select>
@@ -88,7 +93,7 @@ export default function FormCreatePermit({ studentsC, teachersC }: Props) {
         >
           {(teacher) => (
             <SelectItem key={teacher._id!}>
-              {teacher.user?.firstName} {teacher.user?.lastName}
+              {teacher.user?.firstName + ' ' + teacher.user?.lastName}
             </SelectItem>
           )}
         </Select>

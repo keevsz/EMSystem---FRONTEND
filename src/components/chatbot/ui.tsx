@@ -15,7 +15,7 @@ import { io } from 'socket.io-client'
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 
-const socket = io('http://localhost:3001', {
+const socket = io(process.env.NEXT_PUBLIC_API_URL!, {
   reconnectionDelayMax: 10000,
 })
 
@@ -100,8 +100,8 @@ function ChatBotBox() {
             setStatus(1)
             setOpen(!open)
           }}
-          variant='bordered'
-          className='hover:bg-blue-600 hover:text-white'
+          variant="bordered"
+          className="hover:bg-blue-600 hover:text-white"
         >
           Chatbot
         </Button>

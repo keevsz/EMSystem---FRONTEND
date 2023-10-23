@@ -46,6 +46,14 @@ function PermitList({ permits }: Props) {
     })
   }
 
+  if (permitsF.length === 0) {
+    return (
+      <div className="bg-gray-100 mt-2 h-20 rounded-lg flex justify-center items-center">
+        Aún no se han registrado permisos
+      </div>
+    )
+  }
+
   return (
     <div>
       <Accordion>
@@ -55,12 +63,13 @@ function PermitList({ permits }: Props) {
               key={index}
               aria-label="Accordion 1"
               title={
-                <div className="flex flex-row gap-3 items-center rounded p-1">
+                <div className="flex flex-row gap-3 items-center rounded p-1 font-semibold">
                   Alumno: {permit.student.user.firstName}{' '}
                   {permit.student.user.lastName}
                 </div>
               }
               onPress={async () => {
+                if (session?.user.role === 'parent') return
                 const newPermit = await fetchUpdatePermit(
                   session?.backendTokens.accessToken!,
                   {
@@ -106,7 +115,13 @@ function PermitList({ permits }: Props) {
                     <Textarea isDisabled value={permit.description} />
                     Comentario de profesor:
                     <Input
-                      isDisabled={permit.adittionalNotes ? true : false}
+                      isDisabled={
+                        permit.adittionalNotes
+                          ? true
+                          : session?.user.role === 'parent'
+                          ? true
+                          : false
+                      }
                       value={permit.adittionalNotes || adittionalNotes}
                       onValueChange={setAdittionalNotes}
                     />
@@ -120,24 +135,28 @@ function PermitList({ permits }: Props) {
                         ? 'Aceptado'
                         : 'Rechazado'}
                     </div>
-                    <div className="flex gap-3">
-                      <Button
-                        color="success"
-                        onClick={() => {
-                          updatePermit('accepted', permit._id!)
-                        }}
-                      >
-                        Aceptar
-                      </Button>
-                      <Button
-                        color="danger"
-                        onClick={() => {
-                          updatePermit('rejected', permit._id!)
-                        }}
-                      >
-                        Rechazar
-                      </Button>
-                    </div>
+                    {session?.user.role !== 'parent' ? (
+                      <div className="flex gap-3">
+                        <Button
+                          color="success"
+                          onClick={() => {
+                            updatePermit('accepted', permit._id!)
+                          }}
+                        >
+                          Aceptar
+                        </Button>
+                        <Button
+                          color="danger"
+                          onClick={() => {
+                            updatePermit('rejected', permit._id!)
+                          }}
+                        >
+                          Rechazar
+                        </Button>
+                      </div>
+                    ) : (
+                      <></>
+                    )}
                   </div>
                 </div>
               </div>
