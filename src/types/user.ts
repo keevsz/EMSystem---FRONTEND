@@ -31,6 +31,22 @@ export interface IStudent extends Partial<IUser> {
   gender: string
 }
 
+
+export interface IStudentP{
+  dni: string
+  birthdate: string
+  address: string
+  gender: string
+  user: IUser
+}
+export interface IStudentAndUser {
+  dni: string
+  birthdate: string
+  address: string
+  gender: string
+  students?: IStudentP[]
+}
+
 export interface IParent extends Partial<IUser> {
   email: string
   dni: string
