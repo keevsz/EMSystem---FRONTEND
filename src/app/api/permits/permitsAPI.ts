@@ -1,4 +1,4 @@
-import { IPermit } from "@/types/permit"
+import { IPermit } from '@/types/permit'
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL
 
@@ -74,3 +74,24 @@ export async function fetchUpdatePermit(
   return data
 }
 
+export async function fetchReportPermit() {
+  const res = await fetch(`${BACKEND_URL}/permits/report`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      from: '2015-01-01',
+      to: '2025-01-01',
+    }),
+  })
+  const data = await res.json()
+  if (
+    data.statusCode === 403 ||
+    data.statusCode === 401 ||
+    data.statusCode === 400
+  ) {
+    throw new Error(data.message)
+  }
+  return data
+}

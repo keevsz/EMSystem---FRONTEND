@@ -1,5 +1,5 @@
-import { IStudentTeacherCourse } from './course'
-import { IStudent } from './user'
+import { IStudentTeacherCourse, ITeacherCourse } from './course'
+import { IStudent, IStudentP } from './user'
 
 export interface INote {
   _id: string
@@ -27,4 +27,22 @@ export interface ISimpleUnit {
 export interface IStudentNotesFilter {
   teacherCourseId: string
   studentId: string
+}
+
+export interface INoteReport {
+  student: string
+  notes: Note[]
+}
+
+export interface Note {
+  course: string
+  units: Unit[]
+  finalNote: number,
+  finalLetter: string
+}
+
+export interface Unit {
+  unit: number
+  note: number
+  _id: string
 }

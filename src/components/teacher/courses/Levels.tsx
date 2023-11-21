@@ -80,7 +80,7 @@ function TeacherCourses() {
         <Button onClick={fetchTeacherCoursesFn}>Buscar</Button>
       </div>
 
-      <div className="flex text-2xl gap-5 justify-center">
+      <div className="flex text-2xl gap-5">
         {teacherCourses.length ? (
           teacherCourses?.map((tc: ITeacherCourse, index: number) => {
             return (
@@ -90,14 +90,15 @@ function TeacherCourses() {
                     className="p-10 cursor-pointer hover:opacity-70"
                     key={index}
                   >
-                    {tc.course.name}
+                    <strong>{tc.course.name}</strong>
+                    {tc.teacher.user?.lastName}
                   </Card>
                 </Link>
               </div>
             )
           })
         ) : (
-          <div className="flex justify-center items-center pt-10">
+          <div className="flex justify-center items-center pt-10 font-semibold">
             Seleccione el grado y el año
           </div>
         )}

@@ -2,7 +2,6 @@ import { ITuition } from '@/types/tuition'
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL
 
-
 export interface ITuitionRequest {
   parentName: string
   parentLastname: string
@@ -50,6 +49,28 @@ export async function fetchTuition(id: string) {
     // headers: {
     //   authorization: `Bearer ${accessToken}`,
     // },
+  })
+  const data = await res.json()
+  if (
+    data.statusCode === 403 ||
+    data.statusCode === 401 ||
+    data.statusCode === 400
+  ) {
+    throw new Error(data.message)
+  }
+  return data
+}
+
+export async function fetchTuitionReport() {
+  const res = await fetch(`${BACKEND_URL}/tuitions/report`, {
+    method: 'POST',
+    body: JSON.stringify({
+      from: '2015-01-01',
+      to: '2025-01-01',
+    }),
+    headers: {
+      'Content-Type': 'application/json',
+    },
   })
   const data = await res.json()
   if (

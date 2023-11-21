@@ -268,7 +268,32 @@ export async function fetchExternalUserByDNI(accessToken: string, dni: string) {
     data.statusCode === 400 ||
     data.statusCode === 422
   ) {
-    console.log({ data })
+    throw new Error(data.message)
+  }
+  return data
+}
+
+interface Filter {
+  degree: string
+  schoolYear: string
+}
+
+export async function fetchStudentsFiltered(accessToken: string, body: Filter) {
+  const res = await fetch(`${BACKEND_URL}/students/filtered`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: `Bearer ${accessToken}`,
+    },
+    body: JSON.stringify(body),
+  })
+  const data = await res.json()
+  if (
+    data.statusCode === 403 ||
+    data.statusCode === 401 ||
+    data.statusCode === 400 ||
+    data.statusCode === 422
+  ) {
     throw new Error(data.message)
   }
   return data

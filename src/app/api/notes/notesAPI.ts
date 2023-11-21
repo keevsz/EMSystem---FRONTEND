@@ -50,3 +50,28 @@ export async function fetchEditNotes(
   }
   return data
 }
+
+interface Filter {
+  degreeId: string
+  schoolYearId: string
+  studentId: string
+}
+export async function fetchReport(accessToken: string, filter: Filter) {
+  const res = await fetch(`${BACKEND_URL}/notes/report`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: `Bearer ${accessToken}`,
+    },
+    body: JSON.stringify(filter),
+  })
+  const data = await res.json()
+  if (
+    data.statusCode === 403 ||
+    data.statusCode === 401 ||
+    data.statusCode === 400
+  ) {
+    throw new Error(data.message)
+  }
+  return data
+}

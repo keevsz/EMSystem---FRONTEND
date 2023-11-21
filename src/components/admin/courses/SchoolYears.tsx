@@ -320,14 +320,15 @@ function SchoolYears({ schoolYears, degrees, courses, teachers }: Props) {
                 className="text-center cursor-pointer hover:opacity-50"
               >
                 <div className="text-lg font-bold">{c.course.name}</div>
-                <div>{c.teacher.user!.firstName}</div>
+                <div><strong>Profesor: </strong></div>
+                <div>{c.teacher.user!.lastName}</div>
               </CardBody>
             </Card>
           ))}
         </div>
       ) : (
         <div className="h-24 text-xl font-semibold flex justify-center items-center">
-          Aún no se han registrado alumnos
+          Aún no se han registrado cursos
         </div>
       )}
     </div>

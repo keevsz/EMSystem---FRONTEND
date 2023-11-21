@@ -32,6 +32,7 @@ export interface IStudent extends Partial<IUser> {
 }
 
 export interface IStudentP {
+  _id?: string
   dni: string
   birthdate: string
   address: string
