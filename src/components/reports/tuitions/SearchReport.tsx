@@ -43,9 +43,6 @@ export default function SearchReport({ report }: Props) {
               {
                 label: 'Matrículas',
                 data: report?.map((n) => n.totalMatriculas),
-                //   backgroundColor: report?.map(
-                //     (item) => colors[item.finalLetter] || 'gray'
-                //   ),
               },
             ],
           }}
