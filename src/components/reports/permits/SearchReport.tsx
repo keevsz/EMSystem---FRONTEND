@@ -16,7 +16,7 @@ export default function SearchReport({ report }: Props) {
     <div>
       <Bar
         style={{ width: '400px', height: '400px' }}
-        title="Gráfico de notas"
+        title="Gráfico de permisos"
         options={{
           maintainAspectRatio: false,
           scales: {
@@ -39,7 +39,7 @@ export default function SearchReport({ report }: Props) {
           labels: report?.map((r) => r._id),
           datasets: [
             {
-              label: 'Notas',
+              label: 'Permisos',
               data: report?.map((n) => n.count),
             },
           ],
