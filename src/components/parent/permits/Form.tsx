@@ -52,7 +52,7 @@ export default function FormCreatePermit({ studentsC, teachersC }: Props) {
   return (
     <div className="w-full flex flex-col gap-4 py-4">
       <div className="text-lg font-semibold">Nuevo permiso</div>
-      <div className="flex ">
+      <div className="flex">
         <div className="flex justify-end items-center w-20">Padre: </div>
         <Textarea
           variant="flat"

@@ -16,7 +16,9 @@ export const config = {
     '/teacher/(.*)',
     '/teacher/courses/(.*)',
     '/parent/(.*)',
-    '/reports/notes',
     '/reports',
+    '/reports/(.*)',
+    '/certificates/(.*)',
+    '/certificates',
   ],
 }

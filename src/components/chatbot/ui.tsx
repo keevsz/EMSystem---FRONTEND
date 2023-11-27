@@ -1,10 +1,6 @@
 'use client'
 import {
   Button,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger,
   Input,
   Popover,
   PopoverContent,
@@ -26,7 +22,7 @@ const INITIAL_MESSAGES = [
   },
   {
     user: 'bot',
-    message: '1. Guiarte',
+    message: '1. ¿Cómo matricular a un estudiante?',
   },
   {
     user: 'bot',
@@ -34,7 +30,7 @@ const INITIAL_MESSAGES = [
   },
   {
     user: 'bot',
-    message: '3. Preguntas frecuentes',
+    message: '3. Horario de funcionamiento',
   },
 ]
 
@@ -80,7 +76,7 @@ function ChatBotBox() {
       const timer = setTimeout(() => {
         const nextMessage = INITIAL_MESSAGES.shift()
         setMessages((prevMessages) => [...prevMessages, nextMessage] as never[])
-      }, 2000)
+      }, 1000)
 
       return () => clearTimeout(timer)
     }

@@ -80,7 +80,7 @@ function TeacherCourses() {
         <Button onClick={fetchTeacherCoursesFn}>Buscar</Button>
       </div>
 
-      <div className="flex text-2xl gap-5">
+      <div className='text-2xl grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 grid-cols-2 gap-4 gap-y-4"'>
         {teacherCourses.length ? (
           teacherCourses?.map((tc: ITeacherCourse, index: number) => {
             return (

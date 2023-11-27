@@ -34,6 +34,7 @@ function TeacherCoursesStudents() {
       session?.backendTokens.accessToken!,
       params.teacherCourseId as string
     )
+    console.log({ teacherCourseStudents })
     setTeacherCourse(teacherCourseStudents)
   }
 
