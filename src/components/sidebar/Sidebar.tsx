@@ -16,10 +16,10 @@ async function Sidebar() {
   const role = session?.user.role
 
   const data: any = {
-    admin: <AdminListOptions />,
-    teacher: <TeacherListOptions />,
-    student: <StudentListOptions />,
-    parent: <ParentListOptions />,
+    admin: <AdminListOptions mobile={false} />,
+    teacher: <TeacherListOptions mobile={false}/>,
+    student: <StudentListOptions mobile={false}/>,
+    parent: <ParentListOptions mobile={false}/>,
   }
   return (
     <aside
