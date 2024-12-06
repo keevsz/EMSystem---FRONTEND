@@ -14,10 +14,10 @@ interface Props {
 }
 export default function SearchReport({ report }: Props) {
   return (
-    <div className="flex flex-col gap-1">
-      <div>
+    <div className="flex flex-wrap justify-between">
+      <div className="h-72 w-full sm:w-[48%]">
         <Bar
-          style={{ width: '400px', height: '400px' }}
+          style={{ height: '400px' }}
           title="Gráfico de matrículas"
           options={{
             maintainAspectRatio: false,
@@ -25,6 +25,7 @@ export default function SearchReport({ report }: Props) {
               y: {
                 beginAtZero: true,
                 min: 0,
+                max: 20,
                 ticks: {
                   stepSize: 1,
                 },
@@ -49,9 +50,9 @@ export default function SearchReport({ report }: Props) {
         ></Bar>
       </div>
 
-      <div>
+      <div className="h-72 w-full sm:w-[48%]">
         <Line
-          style={{ width: '400px', height: '400px' }}
+          style={{ height: '400px' }}
           title="Gráfico de matrículas"
           options={{
             maintainAspectRatio: false,

@@ -70,7 +70,9 @@ function ChatBotBox() {
   useEffect(() => {
     if (!status) return
 
-    let chatMessages = document.getElementById('chatMessages')!
+    let chatMessages = document.getElementById('chatMessages')
+    if (!chatMessages) return
+    
     chatMessages.scrollTop = chatMessages.scrollHeight
     if (INITIAL_MESSAGES.length > 0) {
       const timer = setTimeout(() => {
@@ -89,7 +91,7 @@ function ChatBotBox() {
   }, [open])
 
   return (
-    <Popover placement="top">
+    <Popover placement="top" style={{ position: 'fixed' }}>
       <PopoverTrigger>
         <Button
           onClick={() => {
@@ -158,7 +160,7 @@ function ChatBotBox() {
               }}
               value={message}
               onKeyDown={(e) => {
-                if (e.key === 'Enter') {
+                if (e.key === 'Enter' && message) {
                   sendMessageToServer()
                   setMessage('')
                   setMessages(

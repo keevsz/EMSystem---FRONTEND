@@ -125,24 +125,27 @@ function Form({ user }: Props) {
                   accept=".jpg,.jpeg,.png"
                 />
 
-                <Button fullWidth>
-                  <label
-                    className="cursor-pointer bg-gray-300 w-full h-full flex justify-center items-center"
-                    htmlFor="file_input"
+                <div className='flex justify-center items-center gap-2 flex-wrap'>
+                  <Button fullWidth>
+                    <label
+                      className="cursor-pointer bg-gray-300 w-full h-full flex justify-center items-center"
+                      htmlFor="file_input"
+                    >
+                      Editar
+                    </label>
+                  </Button>
+                  <Button
+                    fullWidth
+                    color="danger"
+                    onClick={() => {
+                      setPic(user.avatar)
+                    }}
                   >
-                    Editar
-                  </label>
-                </Button>
-                <Button
-                  color="danger"
-                  onClick={() => {
-                    setPic(user.avatar)
-                  }}
-                >
-                  Restablecer
-                </Button>
+                    Restablecer
+                  </Button>
+                </div>
               </div>
-              <div>JPG, JPEG o PNG permitidos. Tamaño máximo de 800K.</div>
+              <div className='text-xs text-bold mt-2'>JPG, JPEG o PNG permitidos. Tamaño máximo de 800K.</div>
             </>
           )}
         </div>

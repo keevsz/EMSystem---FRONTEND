@@ -115,7 +115,7 @@ function ParentStudentsList() {
         <TableHeader>
           <TableColumn>Nombres y apellidos</TableColumn>
           <TableColumn>DNI</TableColumn>
-          <TableColumn className="flex items-center">Notas</TableColumn>
+          {/* <TableColumn className="flex items-center">Notas</TableColumn> */}
         </TableHeader>
         <TableBody>
           {teacherStudents.map((student) => {
@@ -125,7 +125,7 @@ function ParentStudentsList() {
                   {student.user.firstName} {student.user.lastName}
                 </TableCell>
                 <TableCell>{student.dni}</TableCell>
-                <TableCell>
+                {/* <TableCell>
                   <div className="relative flex items-center gap-2">
                     <Tooltip
                       content="Ver notas"
@@ -139,7 +139,7 @@ function ParentStudentsList() {
                       </span>
                     </Tooltip>
                   </div>
-                </TableCell>
+                </TableCell> */}
               </TableRow>
             )
           })}

@@ -207,7 +207,9 @@ function TeacherCoursesStudents() {
                                 </div>
                               </div>
                             ) : (
-                              <Spinner />
+                              <div className="flex justify-center items-center">
+                                <Spinner />
+                              </div>
                             )}
                           </>
                         </AccordionItem>

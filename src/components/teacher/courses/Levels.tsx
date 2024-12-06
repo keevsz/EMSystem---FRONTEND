@@ -80,14 +80,14 @@ function TeacherCourses() {
         <Button onClick={fetchTeacherCoursesFn}>Buscar</Button>
       </div>
 
-      <div className='text-2xl grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 grid-cols-2 gap-4 gap-y-4"'>
+      <div className='text-2xl flex flex-wrap gap-5'>
         {teacherCourses.length ? (
           teacherCourses?.map((tc: ITeacherCourse, index: number) => {
             return (
-              <div key={index}>
+              <div key={index} className='w-64'>
                 <Link href={`/teacher/courses/${tc._id}`}>
                   <Card
-                    className="p-10 cursor-pointer hover:opacity-70"
+                    className="p-6 cursor-pointer hover:opacity-70"
                     key={index}
                   >
                     <strong>{tc.course.name}</strong>

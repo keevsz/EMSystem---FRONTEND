@@ -27,25 +27,20 @@ export default async function AdminDashboard({
   )
   const adminReport = adminReportResponse.data
   return (
-    <div>
-      <h1>Dashboard</h1>
+    <div className="max-w-full">
+      <h1 className='text-center text-bold mb-2'>Usuarios</h1>
       <UsersMain />
       <br />
       <br />
       <div>
-        <h2 className='text-center'>Reportes generales</h2>
-        <br />
+        <h1 className="text-center text-bold mb-2">Reportes generales</h1>
         <AdminReport adminReport={adminReport}></AdminReport>
-        <br />
       </div>
-      <div className="flex flex-row gap-10">
-        <div className="w-1/2">
+      <div>
           <SearchTuitionsReport report={tuitionReport} />
-        </div>
-        <br />
-        <div className="w-1/2">
+      </div>
+      <div>
           <SearchReport report={permitsReport} />
-        </div>
       </div>
     </div>
   )

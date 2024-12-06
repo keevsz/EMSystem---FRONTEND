@@ -29,7 +29,7 @@ function Login() {
   }
 
   return (
-    <div className="bg-white p-10 text-center justify-center w-1/4 flex flex-col">
+    <div className="bg-white p-10 text-center justify-center w-96 flex flex-col">
       <h3 className="text-xl font-bold">IEP </h3>
       <div className="flex justify-center ">
         <Image
